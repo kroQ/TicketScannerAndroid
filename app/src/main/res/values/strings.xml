@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">TicketScanner</string>
+
+    <string name="login">Login...</string>
+    <string name="loginS">Login</string>
+    <string name="password">Password...</string>
+    <string name="passwordS">Password</string>
+    <string name="sing_in">Sign in</string>
+    <string name="are_you_new">Are you new here?</string>
+    <string name="podaj_kod_bazy">Podaj kod bazy</string>
+    <string name="po_cz">Połącz</string>
+    <string name="mo_esz_po_czy_si_z_wielu_telefon_w_do_jednej_bazy">Możesz połączyć się z wielu telefonów do jednej bazy</string>
+    <string name="albo">Albo...</string>
+    <string name="stw_rz_now">Stwórz nową</string>
+    <string name="wpisz_kod">Wpisz kod...</string>
+    <string name="kod">Kod...</string>
+    <string name="podaj_unikatowy_kod_przez_kt_ry_b_dziesz_si_czy_z_baz">Podaj unikatowy kod, przez który będziesz się łączył z bazą</string>
+    <string name="wszyscy">Wszyscy</string>
+    <string name="tylko_zaufani">Tylko zaufani</string>
+    <string name="kto_b_dzie_m_g_skanowa_bilety">Kto będzie mógł skanować bilety?</string>
+    <string name="dodaj">Dodaj</string>
+    <string name="name">Name...</string>
+    <string name="nameS">Name</string>
+    <string name="nazwa_uzytkownika">Nazwa użytkownika...</string>
+    <string name="wybor">Wybor</string>
+    <string name="dodaj_bn">Dodaj</string>
+    <string name="menu_add">Dodaj</string>
+    <string name="menu_edit">Edycja</string>
+    <string name="menu_delete">Usuń</string>
+    <string name="imie">Name...</string>
+    <string name="surname">Surname...</string>
+    <string name="surnameS">Surname</string>
+    <string name="zarejestruj_sie">Zarejestruj się</string>
+    <string name="sing_on">Sign on</string>
+    <string name="has_o">Hasło...</string>
+    <string name="repeat_password">Repeat password...</string>
+    <string name="repeat_passwordS">Repeat password</string>
+    <string name="baza_danych">MOJE BAZY</string>
+    <string name="skanuj_kolejna_osobe">Skanuj kolejną osobę</string>
+    <string name="skanuj">SKANUJ</string>
+    <string name="baza">Baza:</string>
+    <string name="dodaj_baze">Dodaj baze</string>
+    <string name="Email">E-mail...</string>
+    <string name="emailS">E-mail</string>
+    <string name="zalogowany_jako">Zalogowany jako:</string>
+    <string name="mozesz_tez">Możesz też wejść w...</string>
+    <string name="wyloguj">WYLOGUJ</string>
+
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+</resources>

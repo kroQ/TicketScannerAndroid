@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/etNameRegister"
-        android:textSize="10dp"
         android:layout_alignStart="@+id/etNameRegister"
         android:layout_marginBottom="-30dp"
-        android:text="@string/nameS" />
+        android:text="@string/nameS"
+        android:textSize="10dp" />
+
     <EditText
-        android:theme="@style/Theme.App.Base"
         android:id="@+id/etNameRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +23,8 @@
         android:ems="10"
         android:hint="@string/name"
         android:inputType="textPersonName"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:theme="@style/Theme.App.Base" />
 
     <TextView
         android:id="@+id/surnameText"
@@ -35,32 +37,18 @@
         android:textSize="10dp" />
 
     <EditText
-        android:id="@+id/etLoginRegister"
+        android:id="@+id/etSurnameRegister"
         android:layout_width="wrap_content"
-        android:theme="@style/Theme.App.Base"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/etSurnameRegister"
-        android:layout_alignRight="@+id/etSurnameRegister"
-        android:layout_below="@+id/etSurnameRegister"
+        android:layout_alignLeft="@+id/etNameRegister"
+        android:layout_alignStart="@+id/etNameRegister"
+        android:layout_below="@+id/etNameRegister"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="@string/login"
+        android:hint="@string/surname"
         android:inputType="textPersonName"
-        android:textAlignment="center" />
-
-    <Button
-        android:id="@+id/btZarejestrujKonto"
-        android:layout_width="wrap_content"
-        android:theme="@style/AppTheme.Button"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/etPasswordRegister2"
-        android:layout_alignLeft="@+id/etPasswordRegister2"
-        android:layout_alignRight="@+id/etPasswordRegister2"
-        android:layout_alignStart="@+id/etPasswordRegister2"
-        android:layout_below="@+id/etPasswordRegister2"
-        android:layout_marginTop="60dp"
-        android:onClick="onClickBtZarejestrujKonto"
-        android:text="@string/sing_on" />
+        android:textAlignment="center"
+        android:theme="@style/Theme.App.Base" />
 
     <TextView
         android:id="@+id/LoginText"
@@ -73,18 +61,18 @@
         android:textSize="10dp" />
 
     <EditText
-        android:id="@+id/etSurnameRegister"
+        android:id="@+id/etLoginRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.App.Base"
-        android:layout_alignLeft="@+id/etNameRegister"
-        android:layout_alignStart="@+id/etNameRegister"
-        android:layout_below="@+id/etNameRegister"
+        android:layout_alignEnd="@+id/etSurnameRegister"
+        android:layout_alignRight="@+id/etSurnameRegister"
+        android:layout_below="@+id/etSurnameRegister"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="@string/surname"
+        android:hint="@string/login"
         android:inputType="textPersonName"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:theme="@style/Theme.App.Base" />
 
     <TextView
         android:id="@+id/emailText"
@@ -99,16 +87,16 @@
     <EditText
         android:id="@+id/etEmailRegister"
         android:layout_width="wrap_content"
-        android:theme="@style/Theme.App.Base"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etLoginRegister"
         android:layout_alignLeft="@+id/etLoginRegister"
         android:layout_alignStart="@+id/etLoginRegister"
+        android:layout_below="@+id/etLoginRegister"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/Email"
         android:inputType="textEmailAddress"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:theme="@style/Theme.App.Base" />
 
     <TextView
         android:id="@+id/passwordText"
@@ -121,18 +109,18 @@
         android:textSize="10dp" />
 
     <EditText
-        android:id="@+id/etPasswordRegister2"
+        android:id="@+id/etPasswordRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.App.Base"
-        android:layout_alignLeft="@+id/etPasswordRegister"
-        android:layout_alignStart="@+id/etPasswordRegister"
-        android:layout_below="@+id/etPasswordRegister"
+        android:layout_alignLeft="@+id/etEmailRegister"
+        android:layout_alignStart="@+id/etEmailRegister"
+        android:layout_below="@+id/etEmailRegister"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="@string/repeat_password"
+        android:hint="@string/password"
         android:inputType="textPassword"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:theme="@style/Theme.App.Base" />
 
     <TextView
         android:id="@+id/repeatPasswordText"
@@ -145,17 +133,30 @@
         android:textSize="10dp" />
 
     <EditText
-        android:id="@+id/etPasswordRegister"
+        android:id="@+id/etPasswordRegister2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etEmailRegister"
-        android:layout_alignStart="@+id/etEmailRegister"
-        android:theme="@style/Theme.App.Base"
-        android:layout_below="@+id/etEmailRegister"
+        android:layout_alignLeft="@+id/etPasswordRegister"
+        android:layout_alignStart="@+id/etPasswordRegister"
+        android:layout_below="@+id/etPasswordRegister"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="@string/password"
+        android:hint="@string/repeat_password"
         android:inputType="textPassword"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:theme="@style/Theme.App.Base" />
 
+    <Button
+        android:id="@+id/btZarejestrujKonto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/etPasswordRegister2"
+        android:layout_alignLeft="@+id/etPasswordRegister2"
+        android:layout_alignRight="@+id/etPasswordRegister2"
+        android:layout_alignStart="@+id/etPasswordRegister2"
+        android:layout_below="@+id/etPasswordRegister2"
+        android:layout_marginTop="60dp"
+        android:onClick="onClickBtZarejestrujKonto"
+        android:text="@string/sing_on"
+        android:theme="@style/AppTheme.Button" />
 </RelativeLayout>
