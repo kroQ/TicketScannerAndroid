@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 import static android.text.TextUtils.isEmpty;
 
-class HeadquartersActivity extends Activity {
+public class HeadquartersActivity extends Activity {
 
     private Button btConnect;
     private EditText etCode;
@@ -41,7 +41,7 @@ class HeadquartersActivity extends Activity {
 
         try {
             JSONObject jo = new JSONObject(getJsonUser(context));
-            tvLoggedAs.setText("Zalogowany jako: " + jo.optString("scn_name") + " "
+            tvLoggedAs.setText(tvLoggedAs.getText().toString() + jo.optString("scn_name") + " "
                     + jo.optString("scn_surname"));
         } catch (JSONException e) {
             e.printStackTrace();

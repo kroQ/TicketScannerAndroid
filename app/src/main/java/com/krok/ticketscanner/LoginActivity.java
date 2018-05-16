@@ -266,7 +266,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (success != null && success.getId() > 0) {
                 context = getApplicationContext();
-                Intent intent = new Intent(context, RegisterActivity.class);
+                Intent intent = new Intent(context, HeadquartersActivity.class);
                 startActivity(intent);
             } else if (success != null ){
                 //finish();
