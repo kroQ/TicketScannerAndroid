@@ -4,22 +4,22 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/nameText"
+        android:id="@+id/name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/etNameRegister"
-        android:layout_alignStart="@+id/etNameRegister"
-        android:layout_marginBottom="-30dp"
+        android:layout_above="@+id/et_name_register"
+        android:layout_alignStart="@+id/et_name_register"
+        android:layout_marginBottom="-60dp"
         android:text="@string/nameS"
         android:textSize="10dp" />
 
     <EditText
-        android:id="@+id/etNameRegister"
+        android:id="@+id/et_name_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="60dp"
         android:ems="10"
         android:hint="@string/name"
         android:inputType="textPersonName"
@@ -27,22 +27,22 @@
         android:theme="@style/Theme.App.Base" />
 
     <TextView
-        android:id="@+id/surnameText"
+        android:id="@+id/surname_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/etSurnameRegister"
-        android:layout_alignStart="@+id/nameText"
+        android:layout_above="@+id/et_surname_register"
+        android:layout_alignStart="@+id/name_text"
         android:layout_marginBottom="-20dp"
         android:text="@string/surnameS"
         android:textSize="10dp" />
 
     <EditText
-        android:id="@+id/etSurnameRegister"
+        android:id="@+id/et_surname_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etNameRegister"
-        android:layout_alignStart="@+id/etNameRegister"
-        android:layout_below="@+id/etNameRegister"
+        android:layout_alignLeft="@+id/et_name_register"
+        android:layout_alignStart="@+id/et_name_register"
+        android:layout_below="@+id/et_name_register"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/surname"
@@ -51,22 +51,22 @@
         android:theme="@style/Theme.App.Base" />
 
     <TextView
-        android:id="@+id/LoginText"
+        android:id="@+id/login_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/etLoginRegister"
-        android:layout_alignStart="@+id/nameText"
+        android:layout_above="@+id/et_login_register"
+        android:layout_alignStart="@+id/name_text"
         android:layout_marginBottom="-20dp"
         android:text="@string/loginS"
         android:textSize="10dp" />
 
     <EditText
-        android:id="@+id/etLoginRegister"
+        android:id="@+id/et_login_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/etSurnameRegister"
-        android:layout_alignRight="@+id/etSurnameRegister"
-        android:layout_below="@+id/etSurnameRegister"
+        android:layout_alignEnd="@+id/et_surname_register"
+        android:layout_alignRight="@+id/et_surname_register"
+        android:layout_below="@+id/et_surname_register"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/login"
@@ -75,22 +75,22 @@
         android:theme="@style/Theme.App.Base" />
 
     <TextView
-        android:id="@+id/emailText"
+        android:id="@+id/email_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/etEmailRegister"
-        android:layout_alignStart="@+id/nameText"
+        android:layout_above="@+id/et_email_register"
+        android:layout_alignStart="@+id/name_text"
         android:layout_marginBottom="-20dp"
         android:text="@string/emailS"
         android:textSize="10dp" />
 
     <EditText
-        android:id="@+id/etEmailRegister"
+        android:id="@+id/et_email_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etLoginRegister"
-        android:layout_alignStart="@+id/etLoginRegister"
-        android:layout_below="@+id/etLoginRegister"
+        android:layout_alignLeft="@+id/et_login_register"
+        android:layout_alignStart="@+id/et_login_register"
+        android:layout_below="@+id/et_login_register"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/Email"
@@ -99,22 +99,22 @@
         android:theme="@style/Theme.App.Base" />
 
     <TextView
-        android:id="@+id/passwordText"
+        android:id="@+id/password_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/etPasswordRegister"
-        android:layout_alignStart="@+id/nameText"
+        android:layout_above="@+id/et_password_register"
+        android:layout_alignStart="@+id/name_text"
         android:layout_marginBottom="-20dp"
         android:text="@string/passwordS"
         android:textSize="10dp" />
 
     <EditText
-        android:id="@+id/etPasswordRegister"
+        android:id="@+id/et_password_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etEmailRegister"
-        android:layout_alignStart="@+id/etEmailRegister"
-        android:layout_below="@+id/etEmailRegister"
+        android:layout_alignLeft="@+id/et_email_register"
+        android:layout_alignStart="@+id/et_email_register"
+        android:layout_below="@+id/et_email_register"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/password"
@@ -123,22 +123,22 @@
         android:theme="@style/Theme.App.Base" />
 
     <TextView
-        android:id="@+id/repeatPasswordText"
+        android:id="@+id/repeat_password_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/etPasswordRegister2"
-        android:layout_alignStart="@+id/nameText"
+        android:layout_above="@+id/et_repeat_password"
+        android:layout_alignStart="@+id/name_text"
         android:layout_marginBottom="-20dp"
         android:text="@string/repeat_passwordS"
         android:textSize="10dp" />
 
     <EditText
-        android:id="@+id/etPasswordRegister2"
+        android:id="@+id/et_repeat_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etPasswordRegister"
-        android:layout_alignStart="@+id/etPasswordRegister"
-        android:layout_below="@+id/etPasswordRegister"
+        android:layout_alignLeft="@+id/et_password_register"
+        android:layout_alignStart="@+id/et_password_register"
+        android:layout_below="@+id/et_password_register"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/repeat_password"
@@ -147,16 +147,15 @@
         android:theme="@style/Theme.App.Base" />
 
     <Button
-        android:id="@+id/btZarejestrujKonto"
+        android:id="@+id/bt_sign_on"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/etPasswordRegister2"
-        android:layout_alignLeft="@+id/etPasswordRegister2"
-        android:layout_alignRight="@+id/etPasswordRegister2"
-        android:layout_alignStart="@+id/etPasswordRegister2"
-        android:layout_below="@+id/etPasswordRegister2"
-        android:layout_marginTop="60dp"
-        android:onClick="onClickBtZarejestrujKonto"
+        android:layout_alignEnd="@+id/et_repeat_password"
+        android:layout_alignLeft="@+id/et_repeat_password"
+        android:layout_alignRight="@+id/et_repeat_password"
+        android:layout_alignStart="@+id/et_repeat_password"
+        android:layout_below="@+id/et_repeat_password"
+        android:layout_marginTop="50dp"
         android:text="@string/sing_on"
         android:theme="@style/AppTheme.Button" />
 </RelativeLayout>

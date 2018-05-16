@@ -7,12 +7,12 @@
     <string name="passwordS">Password</string>
     <string name="sing_in">Sign in</string>
     <string name="are_you_new">Are you new here?</string>
-    <string name="podaj_kod_bazy">Podaj kod bazy</string>
-    <string name="po_cz">Połącz</string>
+    <string name="put_db_code">Put database code</string>
+    <string name="connect">Connect</string>
     <string name="mo_esz_po_czy_si_z_wielu_telefon_w_do_jednej_bazy">Możesz połączyć się z wielu telefonów do jednej bazy</string>
-    <string name="albo">Albo...</string>
-    <string name="stw_rz_now">Stwórz nową</string>
-    <string name="wpisz_kod">Wpisz kod...</string>
+    <string name="or">Or...</string>
+    <string name="create_new_db">Create new database</string>
+    <string name="put_code">Insert a code...</string>
     <string name="kod">Kod...</string>
     <string name="podaj_unikatowy_kod_przez_kt_ry_b_dziesz_si_czy_z_baz">Podaj unikatowy kod, przez który będziesz się łączył z bazą</string>
     <string name="wszyscy">Wszyscy</string>
@@ -42,7 +42,7 @@
     <string name="dodaj_baze">Dodaj baze</string>
     <string name="Email">E-mail...</string>
     <string name="emailS">E-mail</string>
-    <string name="zalogowany_jako">Zalogowany jako:</string>
+    <string name="logged_as">Logged as:</string>
     <string name="mozesz_tez">Możesz też wejść w...</string>
     <string name="wyloguj">WYLOGUJ</string>
 
@@ -51,6 +51,7 @@
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_incorrect_login">This login is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."

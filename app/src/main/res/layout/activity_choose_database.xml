@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <TextView
+        android:id="@+id/tv_logged_as"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/logged_as"
+
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/bt_log_out"
+        android:theme="@style/AppTheme.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="-5dp"
+        android:layout_marginTop="-5dp"
+        android:onClick="onClickBtLogOut"
+        android:text="@string/wyloguj" />
+
+    <TextView
+        android:id="@+id/you_may_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_logged_as"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/mo_esz_po_czy_si_z_wielu_telefon_w_do_jednej_bazy"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/put_base_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/you_may_connect"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="@string/put_db_code"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/et_database_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/put_base_code"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/put_code"
+        android:inputType="textCapCharacters|textPersonName"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/bt_connect_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/et_database_code"
+        android:layout_alignLeft="@+id/et_database_code"
+        android:layout_alignRight="@+id/et_database_code"
+        android:theme="@style/AppTheme.Button"
+        android:layout_alignStart="@+id/et_database_code"
+        android:layout_below="@+id/et_database_code"
+        android:layout_marginTop="25dp"
+        android:text="@string/connect" />
+
+    <TextView
+        android:id="@+id/tv_or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bt_connect_db"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="@string/or" />
+
+    <Button
+        android:id="@+id/bt_create_new_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/bt_connect_db"
+        android:layout_alignLeft="@+id/bt_connect_db"
+        android:layout_alignRight="@+id/bt_connect_db"
+        android:theme="@style/AppTheme.Button"
+        android:layout_alignStart="@+id/bt_connect_db"
+        android:layout_below="@+id/tv_or"
+        android:layout_marginTop="15dp"
+        android:onClick="onClickBtCreateNewBD"
+        android:text="@string/create_new_db" />
+
+    <TextView
+        android:id="@+id/tv_you_can_also"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bt_create_new_db"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="15dp"
+        android:text="@string/mozesz_tez" />
+
+    <Button
+        android:id="@+id/bt_my_databases"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/bt_create_new_db"
+        android:layout_alignLeft="@+id/bt_create_new_db"
+        android:layout_alignRight="@+id/bt_create_new_db"
+        android:layout_alignStart="@+id/bt_create_new_db"
+        android:layout_below="@+id/tv_you_can_also"
+        android:theme="@style/AppTheme.Button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:onClick="onClickBtBazaDanych"
+        android:text="@string/baza_danych" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_new_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        android:layout_below="@+id/bt_my_databases"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/new_big"
+        android:layout_toEndOf="@+id/et_database_code" />
+
+</RelativeLayout>
