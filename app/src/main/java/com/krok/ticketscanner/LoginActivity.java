@@ -5,15 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,11 +20,15 @@ import android.widget.TextView;
 
 import com.krok.json.UserJson;
 
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.concurrent.ExecutionException;
+import java.util.Arrays;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -36,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private UserLoginTask mAuthTask = null;
     private Context context = this;
+
     // UI references.
     private EditText mPasswordView;
     private View mProgressView;
@@ -53,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-//                    attemptLogin();
                     tryToLogin();
                     return true;
                 }
@@ -66,27 +69,18 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 tryToLogin();
-//                attemptLogin();
             }
         });
 
         Button mSignOnButton = findViewById(R.id.sign_on_button);
         mSignOnButton.setOnClickListener(new OnClickListener() {
+            //TODO change activity to register view
             @Override
             public void onClick(View view) {
                 i++;
                 final boolean show;
-                if ( show = (i%2 ==0)) {
+                if (show = (i % 2 == 0)) {
                     int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-//                    mLoginFormView.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
-//                    mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-//                            show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-//                        @Override
-//                        public void onAnimationEnd(Animator animation) {
-//                            mLoginFormView.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
-//                        }
-//                    });
 
                     mProgressView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
                     mProgressView.animate().setDuration(shortAnimTime).alpha(
@@ -100,7 +94,6 @@ public class LoginActivity extends AppCompatActivity {
                     // The ViewPropertyAnimator APIs are not available, so simply show
                     // and hide the relevant UI components.
                     mProgressView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-                    //mLoginFormView.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
                 }
             }
         });
@@ -133,78 +126,19 @@ public class LoginActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        UserJson userJson = new UserJson();
-        userJson.setLogin(login);
-        userJson.setPassword(password);
-
         if (isValid) {
             showProgress(true);
 
-            // The connection URL
-            String url = ConstantsHolder.IP_ADDRESS + ConstantsHolder.URL_LOGIN;
+            UserJson userJson = new UserJson();
+            userJson.setLogin(login);
+            userJson.setPassword(BCrypt.hashpw(password, ConstantsHolder.PASWD_SALT));
 
-            // Create a new RestTemplate instance
-            RestTemplate restTemplate = new RestTemplate();
-
-            // Add the String message converter
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-
-            mAuthTask = new UserLoginTask(login, password);
+            mAuthTask = new UserLoginTask(userJson);
             mAuthTask.execute();
 
-            UserJson response = null;
-            try {
-                response = mAuthTask.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            if (response != null) {
-                System.out.println("\n\n\n\n\n======== LECIMY ==========" + response.getId());
-            }
-        }
-        else{
+        } else {
             focusView.requestFocus();
         }
-    }
-
-//    private void attemptLogin() {
-//        boolean cancel = false;
-//        View focusView = null;
-//
-//        // Check for a valid email address.
-//        if (TextUtils.isEmpty(email)) {
-//            mEmailView.setError(getString(R.string.error_field_required));
-//            focusView = mEmailView;
-//            cancel = true;
-//        } else if (!isEmailValid(email)) {
-//            mEmailView.setError(getString(R.string.error_invalid_email));
-//            focusView = mEmailView;
-//            cancel = true;
-//        }
-//
-//        if (cancel) {
-//            // There was an error; don't attempt login and focus the first
-//            // form field with an error.
-//            focusView.requestFocus();
-//        } else {
-//            // Show a progress spinner, and kick off a background task to
-//            // perform the user login attempt.
-//            showProgress(true);
-//            mAuthTask = new UserLoginTask(email, password);
-//            mAuthTask.execute((Void) null);
-//        }
-//    }
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
     }
 
     /**
@@ -212,68 +146,64 @@ public class LoginActivity extends AppCompatActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-                }
-            });
-        }
-
+        mProgressView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+            }
+        });
+    }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<String, String, UserJson> {
+    public class UserLoginTask extends AsyncTask<String, String, ResponseEntity<UserJson>> {
 
-        private final String mLogin;
-        private final String mPassword;
+        private final UserJson mUserJson;
 
-        UserLoginTask(String login, String password) {
-            mLogin = login;
-            mPassword = password;
+        UserLoginTask(UserJson userJson) {
+            mUserJson = userJson;
         }
 
         @Override
-        protected UserJson doInBackground(String... strings) {
-            UserJson userJson = new UserJson();
-            userJson.setLogin(mLogin);
-            userJson.setPassword(mPassword);
+        protected ResponseEntity<UserJson> doInBackground(String... strings) {
             String url = ConstantsHolder.IP_ADDRESS + ConstantsHolder.URL_LOGIN;
             RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 
-            try {
-                UserJson userReturned = restTemplate.postForObject(url, userJson, UserJson.class);
-                System.out.println("\n\n\n\n\n======== LECIMY doInBackground ==========");
-                return userReturned;
-            } catch (RuntimeException e) {
-                e.printStackTrace();
-                return null;
-            }
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+            HttpEntity<UserJson> entity = new HttpEntity<>(mUserJson, headers);
+
+            ResponseEntity<UserJson> result = restTemplate.exchange(url, HttpMethod.POST, entity, UserJson.class);
+
+            System.out.println(result);
+            System.out.println("Status************: " + result.getStatusCode());
+            result.getStatusCode();
+            return result;
         }
 
         @Override
-        protected void onPostExecute(final UserJson success) {
+        protected void onPostExecute(final ResponseEntity<UserJson> success) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success != null && success.getId() > 0) {
+            if (success.getStatusCode().equals(HttpStatus.OK)) {
+                System.out.println(success.getStatusCode() + " " + success.getStatusCode().getReasonPhrase());
                 context = getApplicationContext();
-                Intent intent = new Intent(context, HeadquartersActivity.class);
+                Intent intent = new Intent(context, RegisterActivity.class);
                 startActivity(intent);
-            } else if (success != null ){
-                //finish();
-                mLoginFormView.setError(getString(R.string.error_incorrect_login));
-
-            }else{
+            } else if (success.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
+                System.out.println(success.getStatusCode() + " " + success.getStatusCode().getReasonPhrase());
+                mLoginFormView.setError(getString(R.string.error_login_not_found));
+                mLoginFormView.requestFocus();
+            } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
+                System.out.println(success.getStatusCode() + " " + success.getStatusCode().getReasonPhrase());
                 mPasswordView.requestFocus();
             }
         }

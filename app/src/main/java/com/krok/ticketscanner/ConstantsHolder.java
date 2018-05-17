@@ -2,6 +2,7 @@ package com.krok.ticketscanner;
 
 class ConstantsHolder {
     final static String IP_ADDRESS = "http://192.168.188.26:8080";
+    final static String PASWD_SALT = "$2a$06$fNzxjujt9RpeEEgbaDc/n.";
     final static String ERROR = "ERROR";
     final static String FALSE = "FALSE";
     final static String QR_UPDATED_EXIT = "QR_UPDATED_EXIT";
@@ -12,6 +13,7 @@ class ConstantsHolder {
     final static String EVENT_IN_JSON = "EVENT_IN_JSON";
     final static String USER_ID = "USER_ID";
     final static String EVENT_ID = "EVENT_ID";
-    final static String SHARED_PREF_KEY = "INZYNIERKA_SHARED_PREF";
+    final static String SHARED_PREF_KEY = "SHARED_PREF";
     final static String URL_LOGIN = "/user/login";
+    final static String URL_REGISTER = "/user/register";
 }

@@ -22,7 +22,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="-5dp"
         android:layout_marginTop="-5dp"
-        android:onClick="onClickBtLogOut"
         android:text="@string/log_out"
         android:theme="@style/AppTheme.Button" />
 
@@ -83,7 +82,6 @@
         android:layout_below="@+id/tv_you_can_also"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:onClick="onClickBtBazaDanych"
         android:text="@string/databases"
         android:theme="@style/AppTheme.Button" />
 

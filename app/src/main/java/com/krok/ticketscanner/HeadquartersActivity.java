@@ -2,18 +2,11 @@ package com.krok.ticketscanner;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import static android.text.TextUtils.isEmpty;
 
 public class HeadquartersActivity extends Activity {
 
@@ -32,20 +25,12 @@ public class HeadquartersActivity extends Activity {
             }
         }
 
-        setContentView(R.layout.activity_choose_database);
+        setContentView(R.layout.activity_headquartes);
         context = getApplicationContext();
 //        btConnect = (Button) this.findViewById(R.id.btPolacz);
 //        etCode = (EditText) this.findViewById(R.id.etDataBaseCode);
 //        tvLoggedAs = (TextView) this.findViewById(R.id.tvLoggedAs);
         //ChooseDatabaseActivity chooseDatabaseActivity = this;
-
-        try {
-            JSONObject jo = new JSONObject(getJsonUser(context));
-            tvLoggedAs.setText(tvLoggedAs.getText().toString() + jo.optString("scn_name") + " "
-                    + jo.optString("scn_surname"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
 //        btConnect.setOnClickListener(new View.OnClickListener() {
 //            @Override

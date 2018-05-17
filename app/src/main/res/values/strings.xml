@@ -47,15 +47,16 @@
     <string name="logged_as">Logged as:</string>
     <string name="you_can_also">You can also check...</string>
     <string name="log_out">Log out</string>
-
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
+
+    <!--Errors-->
     <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_incorrect_login">This login is incorrect</string>
+    <string name="error_login_used">This login is used</string>
+    <string name="error_login_not_found">Login not found</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="error_passwords_not_equals">Passwords are not the same</string>
+    <string name="error_login_cannot_include_space">Login cannot include spaces</string>
+
 </resources>
