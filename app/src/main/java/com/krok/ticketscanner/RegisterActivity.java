@@ -3,17 +3,17 @@ package com.krok.ticketscanner;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.krok.json.UserJson;
 
@@ -29,7 +29,7 @@ import java.util.Arrays;
 
 import static android.text.TextUtils.isEmpty;
 
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends AppCompatActivity {
 
     private UserRegisterTask mAuthTask = null;
     private Context context = this;
@@ -57,7 +57,7 @@ public class RegisterActivity extends Activity {
         prefRegister = getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY, Context.MODE_PRIVATE);
 
         //wyswietlenie tylko raz mozliwosci logiwania
-        if (prefRegister.getBoolean("activity_register", false)) {
+        if (prefRegister.getBoolean(getString(R.string.is_after_register), false)) {
             Intent intent = new Intent(this, HeadquartersActivity.class);
             startActivity(intent);
             finish();
@@ -119,6 +119,7 @@ public class RegisterActivity extends Activity {
             email.setError(getString(R.string.error_field_required));
             is_valid = false;
             focusView = email;
+            //TODO unncoment it
 //        } else if (!Patterns.EMAIL_ADDRESS.matcher(mEmail).matches()) {
 //            email.setError(getString(R.string.error_invalid_email));
 //            focusView = email;
@@ -169,7 +170,7 @@ public class RegisterActivity extends Activity {
 //                settingsJson = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY,
 //                        Context.MODE_PRIVATE);
 //                editor = settingsJson.edit();
-//                editor.putString(ConstantsHolder.USER_IN_JSON, jo.toString());
+//                editor.putString(ConstantsHolder.USER_LOGIN, jo.toString());
 //                editor.putInt(ConstantsHolder.USER_ID, jo.optInt("scn_id"));
 //                editor.apply();
 //
@@ -221,22 +222,41 @@ public class RegisterActivity extends Activity {
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             HttpEntity<UserJson> entity = new HttpEntity<>(mUserJson, headers);
 
-            ResponseEntity<UserJson> result = restTemplate.exchange(url, HttpMethod.POST, entity, UserJson.class);
-            return result;
+            return restTemplate.exchange(url, HttpMethod.POST, entity, UserJson.class);
         }
 
         @Override
-        protected void onPostExecute(final ResponseEntity<UserJson> success) {
+        protected void onPostExecute(final ResponseEntity<UserJson> result) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success.getStatusCode().equals(HttpStatus.OK)) {
-                System.out.println(success.getStatusCode() + " " + success.getStatusCode().getReasonPhrase());
+            if (result.getStatusCode().equals(HttpStatus.OK)) {
+                System.out.println(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
+
+                //zapisanie obiektu uzytkownika w SharedPreferences
+                SharedPreferences settingsJson;
+                SharedPreferences.Editor editor;
+                settingsJson = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY,
+                        Context.MODE_PRIVATE);
+                editor = settingsJson.edit();
+                editor.putString(ConstantsHolder.USER_LOGIN, result.getBody().getLogin());
+                editor.putInt(ConstantsHolder.USER_ID, result.getBody().getId());
+                editor.apply();
+
+                SharedPreferences.Editor edRegister = prefRegister.edit();
+                edRegister.putBoolean(getString(R.string.is_after_register), true);
+                edRegister.putBoolean(getString(R.string.is_after_login), true);
+                edRegister.apply();
+
                 context = getApplicationContext();
                 Intent intent = new Intent(context, HeadquartersActivity.class);
                 startActivity(intent);
-            } else if (success.getStatusCode().equals(HttpStatus.IM_USED)) {
-                System.out.println(success.getStatusCode() + " " + success.getStatusCode().getReasonPhrase());
+                Toast.makeText(context, ConstantsHolder.REGISTER_COMPLETED, Toast.LENGTH_SHORT).show();
+
+                //finish nie daje mozliwosci powrotu do tego wydoku z nastepnego
+                finish();
+            } else if (result.getStatusCode().equals(HttpStatus.IM_USED)) {
+                System.out.println(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
                 login.setError(getString(R.string.error_login_used));
                 login.requestFocus();
             }

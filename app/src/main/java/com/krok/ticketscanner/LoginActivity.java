@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,18 +39,26 @@ public class LoginActivity extends AppCompatActivity {
      */
     private UserLoginTask mAuthTask = null;
     private Context context = this;
+    SharedPreferences pref;
 
     // UI references.
     private EditText mPasswordView;
     private View mProgressView;
     private EditText mLoginFormView;
     public static LoginActivity instance = null;
-    int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        pref = getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY, Context.MODE_PRIVATE);
+
+        //wyswietlenie tylko raz mozliwosci logiwania
+        if (pref.getBoolean(getString(R.string.is_after_login), false)) {
+            Intent intent = new Intent(this, HeadquartersActivity.class);
+            startActivity(intent);
+            finish();
+        }
         instance = this;
         mPasswordView = findViewById(R.id.etPasswordLog);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -77,24 +85,9 @@ public class LoginActivity extends AppCompatActivity {
             //TODO change activity to register view
             @Override
             public void onClick(View view) {
-                i++;
-                final boolean show;
-                if (show = (i % 2 == 0)) {
-                    int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-                    mProgressView.animate().setDuration(shortAnimTime).alpha(
-                            show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            mProgressView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-                        }
-                    });
-                } else {
-                    // The ViewPropertyAnimator APIs are not available, so simply show
-                    // and hide the relevant UI components.
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-                }
+                context = getApplicationContext();
+                Intent intent = new Intent(context, RegisterActivity.class);
+                startActivity(intent);
             }
         });
         mLoginFormView = findViewById(R.id.login);
@@ -188,22 +181,22 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(final ResponseEntity<UserJson> success) {
+        protected void onPostExecute(final ResponseEntity<UserJson> result) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success.getStatusCode().equals(HttpStatus.OK)) {
-                System.out.println(success.getStatusCode() + " " + success.getStatusCode().getReasonPhrase());
+            if (result.getStatusCode().equals(HttpStatus.OK)) {
+                System.out.println(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
                 context = getApplicationContext();
-                Intent intent = new Intent(context, RegisterActivity.class);
+                Intent intent = new Intent(context, HeadquartersActivity.class);
                 startActivity(intent);
-            } else if (success.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-                System.out.println(success.getStatusCode() + " " + success.getStatusCode().getReasonPhrase());
+            } else if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
+                System.out.println(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
                 mLoginFormView.setError(getString(R.string.error_login_not_found));
                 mLoginFormView.requestFocus();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
-                System.out.println(success.getStatusCode() + " " + success.getStatusCode().getReasonPhrase());
+                System.out.println(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
                 mPasswordView.requestFocus();
             }
         }
