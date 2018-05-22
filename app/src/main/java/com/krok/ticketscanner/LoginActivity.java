@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -41,6 +42,9 @@ public class LoginActivity extends AppCompatActivity {
     private Context context = this;
     SharedPreferences pref;
 
+    private static Logger logger = Logger.getLogger(
+            Thread.currentThread().getStackTrace()[0].getClassName());
+
     // UI references.
     private EditText mPasswordView;
     private View mProgressView;
@@ -52,6 +56,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         pref = getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY, Context.MODE_PRIVATE);
+        instance = this;
+        mPasswordView = findViewById(R.id.etPasswordLog);
+        mLoginFormView = findViewById(R.id.login);
+        mProgressView = findViewById(R.id.login_progress);
 
         //wyswietlenie tylko raz mozliwosci logiwania
         if (pref.getBoolean(getString(R.string.is_after_login), false)) {
@@ -59,8 +67,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        instance = this;
-        mPasswordView = findViewById(R.id.etPasswordLog);
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -90,8 +97,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        mLoginFormView = findViewById(R.id.login);
-        mProgressView = findViewById(R.id.login_progress);
     }
 
     private void tryToLogin() {
@@ -174,9 +179,6 @@ public class LoginActivity extends AppCompatActivity {
 
             ResponseEntity<UserJson> result = restTemplate.exchange(url, HttpMethod.POST, entity, UserJson.class);
 
-            System.out.println(result);
-            System.out.println("Status************: " + result.getStatusCode());
-            result.getStatusCode();
             return result;
         }
 
@@ -184,19 +186,35 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(final ResponseEntity<UserJson> result) {
             mAuthTask = null;
             showProgress(false);
+            logger.info(result.getStatusCode().toString());
 
             if (result.getStatusCode().equals(HttpStatus.OK)) {
-                System.out.println(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
+
+                //zapisanie obiektu uzytkownika w SharedPreferences
+                SharedPreferences preferences;
+                SharedPreferences.Editor editor;
+                preferences = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY,
+                        Context.MODE_PRIVATE);
+                editor = preferences.edit();
+                editor.putString(ConstantsHolder.USER_LOGIN, result.getBody().getLogin());
+                editor.putInt(ConstantsHolder.USER_ID, result.getBody().getId());
+                editor.apply();
+
+                SharedPreferences.Editor edRegister = pref.edit();
+                edRegister.putBoolean(getString(R.string.is_after_register), true);
+                edRegister.putBoolean(getString(R.string.is_after_login), true);
+                edRegister.apply();
+
                 context = getApplicationContext();
                 Intent intent = new Intent(context, HeadquartersActivity.class);
                 startActivity(intent);
+
             } else if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-                System.out.println(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
                 mLoginFormView.setError(getString(R.string.error_login_not_found));
                 mLoginFormView.requestFocus();
             } else {
+                //TODO check password
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
-                System.out.println(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
                 mPasswordView.requestFocus();
             }
         }

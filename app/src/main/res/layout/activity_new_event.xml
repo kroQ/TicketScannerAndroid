@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+
+    <TextView
+        android:id="@+id/insert_unique_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:text="@string/put_unique_name"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/et_event_name"
+        android:layout_alignStart="@+id/et_event_name"
+        android:layout_marginBottom="-55dp"
+        android:text="@string/nameS"
+        android:textSize="10dp" />
+
+    <EditText
+        android:id="@+id/et_event_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_below="@+id/insert_unique_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp"
+        android:ems="10"
+        android:hint="@string/name"
+        android:inputType="textCapCharacters|textPersonName"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:theme="@style/Theme.App.Base" />
+
+    <TextView
+        android:id="@+id/insert_unique_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/code_text"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/put_event_code"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/code_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/et_event_code"
+        android:layout_alignStart="@+id/name_text"
+        android:layout_marginBottom="-165dp"
+        android:text="@string/codeS"
+        android:textSize="10dp" />
+
+    <EditText
+        android:id="@+id/et_event_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="165dp"
+        android:maxLength="6"
+        android:ems="10"
+        android:hint="@string/code"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:theme="@style/Theme.App.Base" />
+
+    <ProgressBar
+        android:id="@+id/event_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/bt_add_database"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="42dp"
+        android:gravity="center"
+        android:text="@string/add_event"
+        android:theme="@style/AppTheme.Button" />
+
+</RelativeLayout>

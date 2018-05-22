@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -39,10 +40,11 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
     private EditText password2;
-    private Boolean isLoginInUse;
     private View mProgressView;
-
     SharedPreferences prefRegister;
+
+    private static Logger logger = Logger.getLogger(
+            Thread.currentThread().getStackTrace()[0].getClassName());
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +87,6 @@ public class RegisterActivity extends AppCompatActivity {
         email.setError(null);
         password.setError(null);
         password2.setError(null);
-        isLoginInUse = true;
         View focusView = null;
 
         String mName = name.getText().toString();
@@ -152,39 +153,6 @@ public class RegisterActivity extends AppCompatActivity {
             mAuthTask = new UserRegisterTask(userJson);
             mAuthTask.execute();
 
-//
-//            if (!isLoginInUse) {
-//                try {
-//                    jo = new JSONObject(pm.get());
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                } catch (ExecutionException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                //zapisanie obiektu uzytkownika w SharedPreferences
-//                SharedPreferences settingsJson;
-//                SharedPreferences.Editor editor;
-//                settingsJson = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY,
-//                        Context.MODE_PRIVATE);
-//                editor = settingsJson.edit();
-//                editor.putString(ConstantsHolder.USER_LOGIN, jo.toString());
-//                editor.putInt(ConstantsHolder.USER_ID, jo.optInt("scn_id"));
-//                editor.apply();
-//
-//                SharedPreferences.Editor edRegister = prefRegister.edit();
-//                edRegister.putBoolean("activity_register", true);
-//                edRegister.putBoolean("activity_main", true);
-//                edRegister.apply();
-//
-//                Intent intent = new Intent(context, LoginActivity.class);
-//                startActivity(intent);
-//                Toast.makeText(context, ConstantsHolder.REGISTER_COMPLETED, Toast.LENGTH_SHORT).show();
-//                //finish nie daje mozliwosci powrotu do tego wydoku z nastepnego
-//                finish();
-//            }
         } else {
             focusView.requestFocus();
         }
@@ -203,7 +171,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-
 
     public class UserRegisterTask extends AsyncTask<String, String, ResponseEntity<UserJson>> {
 
@@ -230,15 +197,16 @@ public class RegisterActivity extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
 
+            logger.info(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
+
             if (result.getStatusCode().equals(HttpStatus.OK)) {
-                System.out.println(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
 
                 //zapisanie obiektu uzytkownika w SharedPreferences
-                SharedPreferences settingsJson;
+                SharedPreferences preferences;
                 SharedPreferences.Editor editor;
-                settingsJson = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY,
+                preferences = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY,
                         Context.MODE_PRIVATE);
-                editor = settingsJson.edit();
+                editor = preferences.edit();
                 editor.putString(ConstantsHolder.USER_LOGIN, result.getBody().getLogin());
                 editor.putInt(ConstantsHolder.USER_ID, result.getBody().getId());
                 editor.apply();
@@ -256,7 +224,6 @@ public class RegisterActivity extends AppCompatActivity {
                 //finish nie daje mozliwosci powrotu do tego wydoku z nastepnego
                 finish();
             } else if (result.getStatusCode().equals(HttpStatus.IM_USED)) {
-                System.out.println(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
                 login.setError(getString(R.string.error_login_used));
                 login.requestFocus();
             }
@@ -268,5 +235,4 @@ public class RegisterActivity extends AppCompatActivity {
             showProgress(false);
         }
     }
-
 }

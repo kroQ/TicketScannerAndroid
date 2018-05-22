@@ -2,61 +2,60 @@
     <string name="app_name">TicketScanner</string>
 
     <!--Activity Login-->
-    <string name="login">Login...</string>
+    <string name="login">Login…</string>
     <string name="loginS">Login</string>
-    <string name="password">Password...</string>
+    <string name="password">Password…</string>
     <string name="passwordS">Password</string>
     <string name="sing_in">Sign in</string>
     <string name="are_you_new">Are you new here?</string>
     <string name="sing_on">Sign on</string>
 
     <!--Activity Register-->
-    <string name="name">Name...</string>
+    <string name="name">Name…</string>
     <string name="nameS">Name</string>
-    <string name="surname">Surname...</string>
+    <string name="surname">Surname…</string>
     <string name="surnameS">Surname</string>
-    <string name="or">Or...</string>
+    <string name="or">Or…</string>
     <string name="register">Register</string>
     <string name="create_account">Create an account</string>
-    <string name="repeat_password">Repeat password...</string>
+    <string name="repeat_password">Repeat password…</string>
     <string name="repeat_passwordS">Repeat password</string>
-    <string name="Email">E-mail...</string>
+    <string name="Email">E-mail…</string>
     <string name="emailS">E-mail</string>
 
     <!--Activity Headquartes-->
-    <string name="put_db_code">Put database code</string>
+    <string name="put_event_name">Put event name</string>
     <string name="connect">Connect</string>
-    <string name="connect_by_unique_code">You can connect by unique code</string>
-    <string name="put_code">Insert a code...</string>
-    <string name="put_unique_code">Insert unique code</string>
+    <string name="connect_by_unique_name">You can connect by event name</string>
+    <string name="put_code">Insert a event name…</string>
     <string name="log_out">Log out</string>
-    <string name="you_can_also">You can also check...</string>
-    <string name="databases">My databases</string>
+    <string name="you_can_also">You can also check…</string>
+    <string name="my_events">My events</string>
 
-    <!--Activity NewBase-->
-    <string name="code">Code...</string>
+    <!--Activity NewEvent-->
+    <string name="put_unique_name">Insert unique name</string>
+    <string name="put_event_code">Insert secret code</string>
+    <string name="code">Code…</string>
     <string name="codeS">Code</string>
-    <string name="all_users">All users</string>
-    <string name="only_trusted">Only trusted</string>
-    <string name="who_might_scann">Who might scann?</string>
+    <string name="put">Insert unique name</string>
     <string name="add">Add</string>
     <string name="menu_add">Add</string>
     <string name="add_bn">Add</string>
-    <string name="user_name">User name...</string>
+    <string name="user_name">User name…</string>
     <string name="user_nameS">User name</string>
 
     <!--Activity Scan-->
-    <string name="scan_next">Scan next ticket</string>
+    <string name="scan_next">Scan first ticket</string>
+    <string name="last_scan">Latest:&#160;</string>
     <string name="scan">Scan</string>
-    <string name="base">Base:</string>
-
+    <string name="base">Base:&#160;</string>
 
     <!--Not used yet-->
     <string name="choose">Choose</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_delete">Delete</string>
-    <string name="add_db">Add database</string>
-    <string name="logged_as">Logged as: </string>
+    <string name="add_event">Create event</string>
+    <string name="logged_as">Logged as:&#160; </string>
     <string name="is_after_login">is_after_login</string>
     <string name="is_after_register">is_after_register</string>
     <string name="create_new_db">Create new database</string>
@@ -73,5 +72,7 @@
 
     <string name="error_event_not_found">Event not found</string>
     <string name="error_event_used">This event is used</string>
+    <string name="error_event_code_range">Code must had 6 digits</string>
+    <string name="error_event_name_range">Name max lenght is 20 chars</string>
 
 </resources>

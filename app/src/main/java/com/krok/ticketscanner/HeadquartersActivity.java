@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,24 +18,17 @@ import android.widget.Toast;
 
 import com.krok.json.EventJson;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Arrays;
 
 import static android.text.TextUtils.isEmpty;
 
 public class HeadquartersActivity extends AppCompatActivity {
 
-    private Button btConnect;
     private EditText etCode;
     private Context context;
-    private TextView tvLoggedAs;
+    private EventConnectTask mAuthTask = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,29 +39,70 @@ public class HeadquartersActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_headquartes);
         context = getApplicationContext();
-        btConnect = this.findViewById(R.id.bt_connect_db);
-        etCode = this.findViewById(R.id.et_database_code);
-        tvLoggedAs = this.findViewById(R.id.tv_logged_as);
+        Button btConnect = this.findViewById(R.id.bt_connect_event);
+        FloatingActionButton btNewEvent = this.findViewById(R.id.fab_new_db);
+        etCode = this.findViewById(R.id.et_event_code_hq);
+        TextView tvLoggedAs = this.findViewById(R.id.tv_logged_as);
 
         tvLoggedAs.setText(getString(R.string.logged_as) + getUserLoginFromSharedPref(context));
+
+        btNewEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                        Intent intent = new Intent(context, NewEventActivity.class);
+        startActivity(intent);
+            }
+        });
 
         btConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean is_valid = true;
+                if(mAuthTask != null){
+                    return;
+                }
+
+                View focusView = null;
+                boolean isValid = true;
                 etCode.setError(null);
+
                 if (isEmpty(etCode.getText().toString().trim())) {
                     etCode.setError(getString(R.string.error_field_required));
-                    is_valid = false;
+                    isValid = false;
+                    focusView = etCode;
                 }
-                if (is_valid) {
+                if (isValid) {
                     EventJson event = new EventJson();
                     event.setCode(etCode.getText().toString());
-                    EventIdTask eventIdTask = new EventIdTask(event);
-                    eventIdTask.execute();
+                    mAuthTask = new EventConnectTask(event);
+                    mAuthTask.execute();
+                } else {
+                    focusView.requestFocus();
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_log_out:
+                //wyczyszczenie SharedPreferences i przeniesienie do glownej aktywnosci
+                context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY, 0).edit().clear().apply();
+                Intent intent = new Intent(context, LoginActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public String getUserLoginFromSharedPref(Context context) {
@@ -73,33 +111,11 @@ public class HeadquartersActivity extends AppCompatActivity {
         return settings.getString(ConstantsHolder.USER_LOGIN, null);
     }
 
-//    public void onClickBtCreateNewBD(View v) {
-//        Intent intent = new Intent(context, NewDatabaseActivity.class);
-//        startActivity(intent);
-//    }
-//
-//    public void onClickBtBazaDanych(View v) {
-//        SharedPreferences pref;
-//        pref = getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY, Context.MODE_PRIVATE);
-//        int id = pref.getInt(ConstantsHolder.USER_ID, 0);
-//        String idek = Integer.toString(id);
-//        GetEventCode gec = new GetEventCode(HeadquartersActivity.this, idek, context);
-//        gec.execute();
-//    }
-
-//    public void onClickBtLogOut(View v) {
-//        //wyczyszczenie SharedPreferences i przeniesienie do glownej aktywnosci
-//        context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY, 0).edit().clear().apply();
-//        Intent intent = new Intent(context, MainActivity.class);
-//        startActivity(intent);
-//    }
-
-
-    public class EventIdTask extends AsyncTask<String, String, ResponseEntity<EventJson>> {
+    public class EventConnectTask extends AsyncTask<String, String, ResponseEntity<EventJson>> {
 
         private final EventJson mEventJson;
 
-        EventIdTask(EventJson eventJson) {
+        EventConnectTask(EventJson eventJson) {
             mEventJson = eventJson;
         }
 
@@ -108,35 +124,35 @@ public class HeadquartersActivity extends AppCompatActivity {
             String url = ConstantsHolder.IP_ADDRESS + ConstantsHolder.URL_EVENT + mEventJson.getCode();
             RestTemplate restTemplate = new RestTemplate();
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-            HttpEntity<EventJson> entity = new HttpEntity<>(mEventJson, headers);
-
-            return restTemplate.exchange(url, HttpMethod.GET, entity, EventJson.class);
+            return restTemplate.getForEntity(url, EventJson.class);
         }
 
         @Override
         protected void onPostExecute(ResponseEntity<EventJson> result) {
+            mAuthTask = null;
             if (result.getStatusCode().equals(HttpStatus.OK)) {
                 SharedPreferences settingsJson;
                 SharedPreferences.Editor editor;
                 settingsJson = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY,
                         Context.MODE_PRIVATE);
                 editor = settingsJson.edit();
-                editor.putString(ConstantsHolder.EVENT_CODE, result.getBody().getCode());
+                editor.putString(ConstantsHolder.EVENT_NAME, result.getBody().getName());
                 editor.putInt(ConstantsHolder.EVENT_ID, result.getBody().getId());
                 editor.apply();
-                Toast.makeText(context, ConstantsHolder.REGISTER_COMPLETED, Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(context, "Elo mordo", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, ScanActivity.class);
+                startActivity(intent);
             } else if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
                 etCode.setError(getString(R.string.error_event_not_found));
                 etCode.requestFocus();
             } else {
-                //TODO change to ScanActivity
-                Intent intent = new Intent(context, LoginActivity.class);
-                intent.putExtra(ConstantsHolder.EVENT_CODE, result.getBody().getCode());
-                startActivity(intent);
+                Toast.makeText(context, "SOME_CRAZY_ERROR", Toast.LENGTH_SHORT).show();
             }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
         }
     }
 

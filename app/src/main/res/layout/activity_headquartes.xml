@@ -15,32 +15,21 @@
         android:text="@string/logged_as"
         android:textSize="15sp" />
 
-    <Button
-        android:id="@+id/bt_log_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="-5dp"
-        android:layout_marginTop="-5dp"
-        android:text="@string/log_out"
-        android:theme="@style/AppTheme.Button" />
-
-
     <TextView
-        android:id="@+id/put_base_code"
+        android:id="@+id/put_event_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="65dp"
-        android:text="@string/put_db_code"
+        android:text="@string/put_event_name"
         android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/et_database_code"
+        android:id="@+id/et_event_code_hq"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/put_base_code"
+        android:layout_below="@+id/put_event_code"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:ems="10"
@@ -51,14 +40,14 @@
         android:theme="@style/Theme.App.Base" />
 
     <Button
-        android:id="@+id/bt_connect_db"
+        android:id="@+id/bt_connect_event"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/et_database_code"
-        android:layout_alignLeft="@+id/et_database_code"
-        android:layout_alignRight="@+id/et_database_code"
-        android:layout_alignStart="@+id/et_database_code"
-        android:layout_below="@+id/et_database_code"
+        android:layout_alignEnd="@+id/et_event_code_hq"
+        android:layout_alignLeft="@+id/et_event_code_hq"
+        android:layout_alignRight="@+id/et_event_code_hq"
+        android:layout_alignStart="@+id/et_event_code_hq"
+        android:layout_below="@+id/et_event_code_hq"
         android:layout_marginTop="25dp"
         android:text="@string/connect"
         android:theme="@style/AppTheme.Button" />
@@ -72,17 +61,17 @@
         android:text="@string/you_can_also" />
 
     <Button
-        android:id="@+id/bt_my_databases"
+        android:id="@+id/bt_my_ebents"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/et_database_code"
-        android:layout_alignLeft="@+id/et_database_code"
-        android:layout_alignRight="@+id/et_database_code"
-        android:layout_alignStart="@+id/et_database_code"
+        android:layout_alignEnd="@+id/et_event_code_hq"
+        android:layout_alignLeft="@+id/et_event_code_hq"
+        android:layout_alignRight="@+id/et_event_code_hq"
+        android:layout_alignStart="@+id/et_event_code_hq"
         android:layout_below="@+id/tv_you_can_also"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:text="@string/databases"
+        android:text="@string/my_events"
         android:theme="@style/AppTheme.Button" />
 
     <android.support.design.widget.FloatingActionButton
@@ -94,7 +83,7 @@
         android:layout_gravity="end|bottom"
         android:layout_marginBottom="25dp"
         android:layout_marginEnd="25dp"
-        android:src="@drawable/new_big"
+        android:src="@drawable/new_big2"
         app:fabSize="normal" />
 
 </RelativeLayout>
