@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/scan_next"
-        android:textSize="20sp" />
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/btScanuj"
@@ -19,14 +19,15 @@
         android:layout_weight="1"
         android:onClick="onClickBtSkanuj"
         android:text="@string/scan"
+        android:theme="@style/AppTheme.Button"
         android:textSize="50sp" />
 
     <TextView
-        android:id="@+id/tvBaza"
+        android:id="@+id/tvEventName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/base"
-        android:textSize="20sp" />
+        android:textSize="30sp" />
 
 </LinearLayout>

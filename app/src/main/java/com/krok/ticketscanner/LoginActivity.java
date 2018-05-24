@@ -89,7 +89,6 @@ public class LoginActivity extends AppCompatActivity {
 
         Button mSignOnButton = findViewById(R.id.sign_on_button);
         mSignOnButton.setOnClickListener(new OnClickListener() {
-            //TODO change activity to register view
             @Override
             public void onClick(View view) {
                 context = getApplicationContext();

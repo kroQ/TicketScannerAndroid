@@ -20,4 +20,6 @@ class ConstantsHolder {
     final static String URL_LOGIN = "/user/login";
     final static String URL_REGISTER = "/user/register";
     final static String URL_EVENT = "/event/";
+    final static String URL_EVENT_ALL = "/event/all/";
+    final static String URL_TICKET = "/ticket/";
 }

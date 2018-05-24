@@ -25,8 +25,18 @@
         android:text="@string/put_event_name"
         android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/et_event_name_hq"
+        android:layout_alignStart="@+id/et_event_name_hq"
+        android:layout_marginBottom="-30dp"
+        android:text="@string/nameS"
+        android:textSize="10dp" />
+
     <EditText
-        android:id="@+id/et_event_code_hq"
+        android:id="@+id/et_event_name_hq"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/put_event_code"
@@ -34,8 +44,33 @@
         android:layout_marginTop="30dp"
         android:ems="10"
         android:gravity="center"
-        android:hint="@string/put_code"
+        android:hint="@string/insert_event_name"
         android:inputType="textCapCharacters|textPersonName"
+        android:textAlignment="center"
+        android:theme="@style/Theme.App.Base" />
+
+    <TextView
+        android:id="@+id/code_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/et_event_code_secret"
+        android:layout_alignStart="@+id/et_event_name_hq"
+        android:layout_marginBottom="-186dp"
+        android:text="@string/codeS"
+        android:textSize="10dp" />
+
+    <EditText
+        android:id="@+id/et_event_code_secret"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="186dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/insert_event_code"
+        android:inputType="number"
+        android:maxLength="6"
         android:textAlignment="center"
         android:theme="@style/Theme.App.Base" />
 
@@ -43,11 +78,11 @@
         android:id="@+id/bt_connect_event"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/et_event_code_hq"
-        android:layout_alignLeft="@+id/et_event_code_hq"
-        android:layout_alignRight="@+id/et_event_code_hq"
-        android:layout_alignStart="@+id/et_event_code_hq"
-        android:layout_below="@+id/et_event_code_hq"
+        android:layout_alignEnd="@+id/et_event_code_secret"
+        android:layout_alignLeft="@+id/et_event_code_secret"
+        android:layout_alignRight="@+id/et_event_code_secret"
+        android:layout_alignStart="@+id/et_event_code_secret"
+        android:layout_below="@+id/et_event_code_secret"
         android:layout_marginTop="25dp"
         android:text="@string/connect"
         android:theme="@style/AppTheme.Button" />
@@ -58,16 +93,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_below="@+id/bt_connect_event"
+        android:layout_marginTop="25dp"
         android:text="@string/you_can_also" />
 
     <Button
-        android:id="@+id/bt_my_ebents"
+        android:id="@+id/bt_my_events"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/et_event_code_hq"
-        android:layout_alignLeft="@+id/et_event_code_hq"
-        android:layout_alignRight="@+id/et_event_code_hq"
-        android:layout_alignStart="@+id/et_event_code_hq"
+        android:layout_alignEnd="@+id/et_event_name_hq"
+        android:layout_alignLeft="@+id/et_event_name_hq"
+        android:layout_alignRight="@+id/et_event_name_hq"
+        android:layout_alignStart="@+id/et_event_name_hq"
         android:layout_below="@+id/tv_you_can_also"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"

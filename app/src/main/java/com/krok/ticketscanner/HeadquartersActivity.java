@@ -22,13 +22,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
 import static android.text.TextUtils.isEmpty;
 
 public class HeadquartersActivity extends AppCompatActivity {
 
-    private EditText etCode;
+    private EditText etEventName;
+    private EditText etEventCode;
     private Context context;
     private EventConnectTask mAuthTask = null;
+
+    private static Logger logger = Logger.getLogger(
+            Thread.currentThread().getStackTrace()[0].getClassName());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +49,20 @@ public class HeadquartersActivity extends AppCompatActivity {
         context = getApplicationContext();
         Button btConnect = this.findViewById(R.id.bt_connect_event);
         FloatingActionButton btNewEvent = this.findViewById(R.id.fab_new_db);
-        etCode = this.findViewById(R.id.et_event_code_hq);
+        etEventName = this.findViewById(R.id.et_event_name_hq);
+        etEventCode = this.findViewById(R.id.et_event_code_secret);
         TextView tvLoggedAs = this.findViewById(R.id.tv_logged_as);
-
         tvLoggedAs.setText(getString(R.string.logged_as) + getUserLoginFromSharedPref(context));
+
+
+        Button myEvents = this.findViewById(R.id.bt_my_events);
+        myEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MyEventsListActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,16 +81,27 @@ public class HeadquartersActivity extends AppCompatActivity {
 
                 View focusView = null;
                 boolean isValid = true;
-                etCode.setError(null);
+                etEventName.setError(null);
 
-                if (isEmpty(etCode.getText().toString().trim())) {
-                    etCode.setError(getString(R.string.error_field_required));
+                if (isEmpty(etEventName.getText().toString().trim())) {
+                    etEventName.setError(getString(R.string.error_field_required));
                     isValid = false;
-                    focusView = etCode;
+                    focusView = etEventName;
+                }
+                if (isEmpty(etEventCode.getText().toString().trim())) {
+                    etEventCode.setError(getString(R.string.error_field_required));
+                    isValid = false;
+                    focusView = etEventCode;
+                }
+                if (etEventCode.getText().length() < 6) {
+                    isValid = false;
+                    focusView = etEventCode;
+                    etEventCode.setError(getString(R.string.error_event_code_range));
                 }
                 if (isValid) {
                     EventJson event = new EventJson();
-                    event.setCode(etCode.getText().toString());
+                    event.setName(etEventName.getText().toString());
+                    event.setCode(etEventCode.getText().toString());
                     mAuthTask = new EventConnectTask(event);
                     mAuthTask.execute();
                 } else {
@@ -111,7 +140,8 @@ public class HeadquartersActivity extends AppCompatActivity {
         return settings.getString(ConstantsHolder.USER_LOGIN, null);
     }
 
-    public class EventConnectTask extends AsyncTask<String, String, ResponseEntity<EventJson>> {
+
+    private class EventConnectTask extends AsyncTask<String, String, ResponseEntity<EventJson>> {
 
         private final EventJson mEventJson;
 
@@ -121,7 +151,7 @@ public class HeadquartersActivity extends AppCompatActivity {
 
         @Override
         protected ResponseEntity<EventJson> doInBackground(String... params) {
-            String url = ConstantsHolder.IP_ADDRESS + ConstantsHolder.URL_EVENT + mEventJson.getCode();
+            String url = ConstantsHolder.IP_ADDRESS + ConstantsHolder.URL_EVENT + mEventJson.getName() + "//" + mEventJson.getCode();
             RestTemplate restTemplate = new RestTemplate();
 
             return restTemplate.getForEntity(url, EventJson.class);
@@ -143,8 +173,8 @@ public class HeadquartersActivity extends AppCompatActivity {
                 Intent intent = new Intent(context, ScanActivity.class);
                 startActivity(intent);
             } else if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-                etCode.setError(getString(R.string.error_event_not_found));
-                etCode.requestFocus();
+                etEventName.setError(getString(R.string.error_event_not_found));
+                etEventName.requestFocus();
             } else {
                 Toast.makeText(context, "SOME_CRAZY_ERROR", Toast.LENGTH_SHORT).show();
             }
@@ -155,5 +185,6 @@ public class HeadquartersActivity extends AppCompatActivity {
             mAuthTask = null;
         }
     }
+
 
 }

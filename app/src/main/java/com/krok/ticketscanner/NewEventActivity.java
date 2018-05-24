@@ -3,6 +3,7 @@ package com.krok.ticketscanner;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,7 +27,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -34,12 +39,16 @@ public class NewEventActivity extends AppCompatActivity {
 
     private EditText etEventCode;
     private EditText etEventName;
+    private EditText etEventStartDate;
+    private EditText etEventEndDate;
     private Button btAdd;
     private Context context = this;
     private boolean isValid;
     int userId;
     private EventCreateTask mAuthTask = null;
     private View mProgressView;
+    Calendar myCalendarStart;
+    Calendar myCalendarEnd;
 
     private static Logger logger = Logger.getLogger(
             Thread.currentThread().getStackTrace()[0].getClassName());
@@ -48,15 +57,68 @@ public class NewEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         setContentView(R.layout.activity_new_event);
         etEventCode = findViewById(R.id.et_event_code);
         etEventName = findViewById(R.id.et_event_name);
         btAdd = findViewById(R.id.bt_add_database);
         mProgressView = findViewById(R.id.event_progress);
+        etEventStartDate = findViewById(R.id.et_event_start_day);
+        etEventEndDate = findViewById(R.id.et_event_end_day);
 
         SharedPreferences sharedPref = this.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY,
                 Context.MODE_PRIVATE);
         userId = sharedPref.getInt(ConstantsHolder.USER_ID, 0);
+
+
+        final DatePickerDialog.OnDateSetListener dateStart = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendarStart = Calendar.getInstance();
+                myCalendarStart.set(Calendar.YEAR, year);
+                myCalendarStart.set(Calendar.MONTH, monthOfYear);
+                myCalendarStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabelStart();
+            }
+
+        };
+        final DatePickerDialog.OnDateSetListener dateEnd = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendarEnd = Calendar.getInstance();
+                myCalendarEnd.set(Calendar.YEAR, year);
+                myCalendarEnd.set(Calendar.MONTH, monthOfYear);
+                myCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabelEnd();
+            }
+
+        };
+
+        etEventStartDate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                myCalendarStart = Calendar.getInstance();
+                new DatePickerDialog(context, dateStart, myCalendarStart.get(Calendar.YEAR), myCalendarStart.get(Calendar.MONTH),
+                        myCalendarStart.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        etEventEndDate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                myCalendarStart = Calendar.getInstance();
+                new DatePickerDialog(context, dateEnd, myCalendarStart.get(Calendar.YEAR), myCalendarStart.get(Calendar.MONTH),
+                        myCalendarStart.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
 
         btAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,22 +131,44 @@ public class NewEventActivity extends AppCompatActivity {
                 isValid = true;
                 etEventCode.setError(null);
                 etEventName.setError(null);
+                etEventEndDate.setError(null);
+                etEventStartDate.setError(null);
 
                 if (isEmpty(etEventName.getText().toString())) {
-                    etEventName.setError(getString(R.string.error_field_required));
                     isValid = false;
+                    etEventName.setError(getString(R.string.error_field_required));
                     focusView = etEventName;
                 }
 
                 if (etEventCode.getText().length() < 6) {
                     isValid = false;
-                    focusView = etEventCode;
                     etEventCode.setError(getString(R.string.error_event_code_range));
+                    focusView = etEventCode;
                 }
 
                 if (etEventName.getText().toString().trim().length() > 20) {
                     isValid = false;
                     etEventName.setError(getString(R.string.error_event_name_range));
+                    focusView = etEventName;
+                }
+
+                if((isEmpty(etEventEndDate) && !isEmpty(etEventStartDate)) || (isEmpty(etEventStartDate) && !isEmpty(etEventEndDate))){
+                    isValid = false;
+                    if(isEmpty(etEventEndDate)){
+                        etEventEndDate.setError(getString(R.string.one_empty_date));
+                        focusView = etEventEndDate;
+                    } else {
+                        etEventStartDate.setError(getString(R.string.one_empty_date));
+                        focusView = etEventStartDate;
+                    }
+                }
+
+                if(!isEmpty(myCalendarEnd) && !isEmpty(myCalendarStart)){
+                    if (myCalendarEnd.before(myCalendarStart)) {
+                        isValid = false;
+                        etEventStartDate.setError(getString(R.string.end_before_start));
+                        focusView = etEventStartDate;
+                    }
                 }
 
                 if (isValid) {
@@ -95,8 +179,12 @@ public class NewEventActivity extends AppCompatActivity {
                     eventJson.setCode(etEventCode.getText().toString());
                     eventJson.setName(etEventName.getText().toString().trim());
                     eventJson.setOwnerId(userId);
-                    eventJson.setEndEventDate(null);
-                    eventJson.setStartEventDate(null);
+                    if(!isEmpty(myCalendarEnd)){
+                        eventJson.setEndEventDate(myCalendarEnd.getTime());
+                    }
+                    if(!isEmpty(myCalendarStart)){
+                        eventJson.setEndEventDate(myCalendarStart.getTime());
+                    }
                     eventJson.setTicketsPool(0);
 
                     mAuthTask = new EventCreateTask(eventJson);
@@ -109,6 +197,19 @@ public class NewEventActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void updateLabelStart() {
+        String myFormat = "dd-MM-YYYY"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
+        etEventStartDate.setText(sdf.format(myCalendarStart.getTime()));
+    }
+
+    private void updateLabelEnd() {
+        String myFormat = "dd-MM-YYYY";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
+        etEventEndDate.setText(sdf.format(myCalendarStart.getTime()));
+
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -167,6 +268,7 @@ public class NewEventActivity extends AppCompatActivity {
                 context = getApplicationContext();
                 Intent intent = new Intent(context, ScanActivity.class);
                 startActivity(intent);
+                finish();
 
             } else if (result.getStatusCode().equals(HttpStatus.IM_USED)) {
                 etEventName.setError(getString(R.string.error_event_used));

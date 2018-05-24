@@ -28,6 +28,7 @@
         android:layout_above="@+id/et_event_name"
         android:layout_alignStart="@+id/et_event_name"
         android:layout_marginBottom="-55dp"
+        android:layout_marginTop="5dp"
         android:text="@string/nameS"
         android:textSize="10dp" />
 
@@ -36,7 +37,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_below="@+id/insert_unique_name"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="55dp"
         android:ems="10"
@@ -50,8 +50,9 @@
         android:id="@+id/insert_unique_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/code_text"
+        android:layout_below="@id/et_event_name"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="@string/put_event_code"
         android:textAlignment="center" />
@@ -62,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/et_event_code"
         android:layout_alignStart="@+id/name_text"
-        android:layout_marginBottom="-165dp"
+        android:layout_marginBottom="-143dp"
         android:text="@string/codeS"
         android:textSize="10dp" />
 
@@ -72,26 +73,72 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="165dp"
-        android:maxLength="6"
+        android:layout_marginTop="143dp"
         android:ems="10"
         android:hint="@string/code"
         android:inputType="number"
+        android:maxLength="6"
         android:textAlignment="center"
         android:textSize="18sp"
         android:theme="@style/Theme.App.Base" />
+
+    <TextView
+        android:id="@+id/start_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/et_event_start_day"
+        android:layout_alignStart="@+id/et_event_start_day"
+        android:layout_marginBottom="-216dp"
+        android:text="@string/event_start"
+        android:textSize="10dp" />
+
+    <EditText
+        android:id="@+id/et_event_start_day"
+        android:layout_width="118dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="216dp"
+        android:clickable="true"
+        android:focusable="false"
+        android:hint="@string/event_start"
+        android:theme="@style/Theme.App.Base" />
+
+    <TextView
+        android:id="@+id/end_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/et_event_end_day"
+        android:layout_alignTop="@+id/start_text"
+        android:text="@string/event_end"
+        android:textSize="10dp" />
+
+    <EditText
+        android:id="@+id/et_event_end_day"
+        android:layout_width="105dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/et_event_start_day"
+        android:layout_marginEnd="35dp"
+        android:clickable="true"
+        android:focusable="false"
+        android:hint="@string/event_end"
+        android:theme="@style/Theme.App.Base" />
+
 
     <ProgressBar
         android:id="@+id/event_progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:visibility="invisible" />
 
     <Button
         android:id="@+id/bt_add_database"
-        android:layout_width="match_parent"
+        android:layout_width="206dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

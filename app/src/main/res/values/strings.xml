@@ -27,7 +27,8 @@
     <string name="put_event_name">Put event name</string>
     <string name="connect">Connect</string>
     <string name="connect_by_unique_name">You can connect by event name</string>
-    <string name="put_code">Insert a event name…</string>
+    <string name="insert_event_name">Insert a event name…</string>
+    <string name="insert_event_code">Insert a event code…</string>
     <string name="log_out">Log out</string>
     <string name="you_can_also">You can also check…</string>
     <string name="my_events">My events</string>
@@ -43,12 +44,19 @@
     <string name="add_bn">Add</string>
     <string name="user_name">User name…</string>
     <string name="user_nameS">User name</string>
+    <string name="event_start">Start date</string>
+    <string name="event_end">End date</string>
+    <string name="end_before_start">End date is earlier</string>
+    <string name="one_empty_date">Set the date</string>
 
     <!--Activity Scan-->
     <string name="scan_next">Scan first ticket</string>
     <string name="last_scan">Latest:&#160;</string>
     <string name="scan">Scan</string>
     <string name="base">Base:&#160;</string>
+
+    <!--Activity MyEvents-->
+    <string name="my_events_list">List of my events</string>
 
     <!--Not used yet-->
     <string name="choose">Choose</string>
