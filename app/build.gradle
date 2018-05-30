@@ -32,15 +32,6 @@ dependencies {
     compileOnly files('libs/JsonBridge-1.0-SNAPSHOT.jar')
     implementation 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
-//    implementation group: 'com.google.zxing', name: 'android-integration', version: '3.3.0'
-//    implementation group: 'com.google.zxing', name: 'android-core', version: '3.3.0'
-//    implementation group: 'com.google.zxing', name: 'core', version: '3.3.2'
-//    implementation group: 'com.google.zxing', name: 'zxing-parent', version: '3.3.2', ext: 'pom'
-//    implementation 'com.google.zxing:core:3.2.1'
-//    implementation 'com.google.zxing:core:3.3.2'
-//    implementation 'com.google.zxing:zxing-parent:3.3.2'
-//    implementation 'com.google.zxing:android-core:3.3.0'
-//    implementation 'com.google.zxing:android-integration:3.3.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.android.support:appcompat-v7:26.1.0'
 

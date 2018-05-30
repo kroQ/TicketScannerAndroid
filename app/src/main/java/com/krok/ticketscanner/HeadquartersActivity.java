@@ -54,7 +54,6 @@ public class HeadquartersActivity extends AppCompatActivity {
         TextView tvLoggedAs = this.findViewById(R.id.tv_logged_as);
         tvLoggedAs.setText(getString(R.string.logged_as) + getUserLoginFromSharedPref(context));
 
-
         Button myEvents = this.findViewById(R.id.bt_my_events);
         myEvents.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,15 +66,15 @@ public class HeadquartersActivity extends AppCompatActivity {
         btNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                        Intent intent = new Intent(context, NewEventActivity.class);
-        startActivity(intent);
+                Intent intent = new Intent(context, NewEventActivity.class);
+                startActivity(intent);
             }
         });
 
         btConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mAuthTask != null){
+                if (mAuthTask != null) {
                     return;
                 }
 
@@ -140,7 +139,6 @@ public class HeadquartersActivity extends AppCompatActivity {
         return settings.getString(ConstantsHolder.USER_LOGIN, null);
     }
 
-
     private class EventConnectTask extends AsyncTask<String, String, ResponseEntity<EventJson>> {
 
         private final EventJson mEventJson;
@@ -169,12 +167,14 @@ public class HeadquartersActivity extends AppCompatActivity {
                 editor.putString(ConstantsHolder.EVENT_NAME, result.getBody().getName());
                 editor.putInt(ConstantsHolder.EVENT_ID, result.getBody().getId());
                 editor.apply();
-                Toast.makeText(context, "Elo mordo", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, ScanActivity.class);
                 startActivity(intent);
             } else if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
                 etEventName.setError(getString(R.string.error_event_not_found));
                 etEventName.requestFocus();
+            } else if (result.getStatusCode().equals(HttpStatus.IM_USED)) {
+                etEventCode.setError(getString(R.string.error_event_wrong_code));
+                etEventCode.requestFocus();
             } else {
                 Toast.makeText(context, "SOME_CRAZY_ERROR", Toast.LENGTH_SHORT).show();
             }

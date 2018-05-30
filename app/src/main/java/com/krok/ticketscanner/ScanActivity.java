@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.AsyncTask;
@@ -17,7 +18,6 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.krok.json.TicketJson;
-import com.krok.json.UserJson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,9 +29,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 public class ScanActivity extends AppCompatActivity {
@@ -43,6 +47,7 @@ public class ScanActivity extends AppCompatActivity {
     private Context context;
     private int eventId;
     private int userId;
+    private int deviceId;
     TicketSendTask mAuthTask = null;
 
     private static Logger logger = Logger.getLogger(
@@ -61,6 +66,7 @@ public class ScanActivity extends AppCompatActivity {
         settings = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY, Context.MODE_PRIVATE);
         eventId = settings.getInt(ConstantsHolder.EVENT_ID, 0);
         userId = settings.getInt(ConstantsHolder.USER_ID, 0);
+        deviceId = settings.getInt(ConstantsHolder.DEVICE_ID, 0);
     }
 
     public String getBaseNameFromSP(Context context) {
@@ -85,6 +91,7 @@ public class ScanActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        scanNext.setTextColor(Color.GRAY);
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
@@ -113,37 +120,15 @@ public class ScanActivity extends AppCompatActivity {
                 scanNext.setText(nameAndSurname);
                 TicketJson ticket = new TicketJson();
                 try {
-                    ticket = createTickerJsonFromJSONObject(jo);
+                    ticket = createTicketJsonFromJSONObject(jo);
                 } catch (JSONException e) {
                     logger.info(e.getMessage());
                     e.printStackTrace();
                 }
 
-                logger.info("Received:/n" + sbJSON);
-
                 mAuthTask = new TicketSendTask(ticket);
                 mAuthTask.execute();
 
-//                pm.execute(jo.toString(), ConstantsHolder.IP_ADDRESS +
-//                        "/scann");
-
-//                try {
-//                    Toast.makeText(context, pm.get().trim(),
-//                            Toast.LENGTH_SHORT).show();
-//                    if (pm.get().trim().equals(ConstantsHolder.QR_UPDATED_EXIT)) {
-//                        //Jezeli wychodzi to 3x beep bedzie
-//                        ToneGenerator toneG =
-//                                new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
-//                        toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 750);
-//                    } else{
-//                        System.out.println();
-//                    }
-//
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                } catch (ExecutionException e) {
-//                    e.printStackTrace();
-//                }
             }
         } else {
             // This is important, otherwise the result will not be passed to the fragment
@@ -151,15 +136,26 @@ public class ScanActivity extends AppCompatActivity {
         }
     }
 
-    private TicketJson createTickerJsonFromJSONObject(JSONObject ticketData) throws JSONException {
+    private TicketJson createTicketJsonFromJSONObject(JSONObject ticketData) throws JSONException {
         TicketJson json = new TicketJson();
-        Calendar calendar;
-        calendar = Calendar.getInstance();
+//        Calendar calendar;
+//        calendar = Calendar.getInstance();
 
         json.setName(ticketData.getString("name"));
         json.setSurname(ticketData.getString("surname"));
         json.setEmail(ticketData.getString("email"));
-        json.setBirthDate(calendar.getTime());
+//        json.setBirthDate(calendar.getTime());
+
+        DateFormat format = new SimpleDateFormat("dd-MM-YYYY", Locale.ENGLISH);
+        Date date = null;
+        try {
+            date = format.parse(ticketData.getString("birth_date"));
+        } catch (ParseException e) {
+            logger.info("Cannot parse birth_date");
+            e.printStackTrace();
+        }
+
+        json.setBirthDate(date);
         json.setCity(ticketData.getString("city"));
         json.setCode(ticketData.getString("code"));
         json.setFlatNr(ticketData.getString("frat_nr"));
@@ -197,19 +193,19 @@ public class ScanActivity extends AppCompatActivity {
         protected void onPostExecute(ResponseEntity<TicketJson> result) {
             mAuthTask = null;
             if (result.getStatusCode().equals(HttpStatus.OK)) {
-                logger.info(result.getStatusCode().toString() + "DUPSKO");
                 Toast.makeText(context, "Pierwszy raz", Toast.LENGTH_SHORT).show();
 
             } else if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
                 //No W takim wypadku wychodzi, wiec trzeba piknac ze 3 razy
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
-                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
 
-            } else if (result.getStatusCode().equals(HttpStatus.IM_USED)) {
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 80);
-                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                Toast.makeText(context, "SOME_CRAZY_ERROR", Toast.LENGTH_SHORT).show();
-                logger.info(result.getStatusCode().toString() + "DUPSKO2");
+                Toast.makeText(context, "Someone left?", Toast.LENGTH_SHORT).show();
+                scanNext.setTextColor(Color.RED);
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 750);
+
+            } else {
+                Toast.makeText(context, "SOME_ERROR", Toast.LENGTH_SHORT).show();
+                logger.info(result.getStatusCode().toString() + "SOME_ERROR");
 
             }
         }

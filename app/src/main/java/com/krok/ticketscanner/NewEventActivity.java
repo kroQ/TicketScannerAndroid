@@ -102,7 +102,6 @@ public class NewEventActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 myCalendarStart = Calendar.getInstance();
                 new DatePickerDialog(context, dateStart, myCalendarStart.get(Calendar.YEAR), myCalendarStart.get(Calendar.MONTH),
                         myCalendarStart.get(Calendar.DAY_OF_MONTH)).show();
@@ -113,10 +112,9 @@ public class NewEventActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                myCalendarStart = Calendar.getInstance();
-                new DatePickerDialog(context, dateEnd, myCalendarStart.get(Calendar.YEAR), myCalendarStart.get(Calendar.MONTH),
-                        myCalendarStart.get(Calendar.DAY_OF_MONTH)).show();
+                myCalendarEnd = Calendar.getInstance();
+                new DatePickerDialog(context, dateEnd, myCalendarEnd.get(Calendar.YEAR), myCalendarEnd.get(Calendar.MONTH),
+                        myCalendarEnd.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -183,7 +181,7 @@ public class NewEventActivity extends AppCompatActivity {
                         eventJson.setEndEventDate(myCalendarEnd.getTime());
                     }
                     if(!isEmpty(myCalendarStart)){
-                        eventJson.setEndEventDate(myCalendarStart.getTime());
+                        eventJson.setStartEventDate(myCalendarStart.getTime());
                     }
                     eventJson.setTicketsPool(0);
 
@@ -200,15 +198,15 @@ public class NewEventActivity extends AppCompatActivity {
     }
 
     private void updateLabelStart() {
-        String myFormat = "dd-MM-YYYY"; //In which you need put here
+        String myFormat = "dd-MM-yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
         etEventStartDate.setText(sdf.format(myCalendarStart.getTime()));
     }
 
     private void updateLabelEnd() {
-        String myFormat = "dd-MM-YYYY";
+        String myFormat = "dd-MM-yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
-        etEventEndDate.setText(sdf.format(myCalendarStart.getTime()));
+        etEventEndDate.setText(sdf.format(myCalendarEnd.getTime()));
 
     }
 
@@ -252,7 +250,6 @@ public class NewEventActivity extends AppCompatActivity {
         protected void onPostExecute(final ResponseEntity<EventJson> result) {
             mAuthTask = null;
             showProgress(false);
-            logger.info(result.getStatusCode().toString());
 
             if (result.getStatusCode().equals(HttpStatus.OK)) {
 

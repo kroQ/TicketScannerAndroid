@@ -41,13 +41,15 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText password;
     private EditText password2;
     private View mProgressView;
-    SharedPreferences prefRegister;
+    private int deviceId;
 
     private static Logger logger = Logger.getLogger(
             Thread.currentThread().getStackTrace()[0].getClassName());
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences prefRegister;
         setContentView(R.layout.activity_register);
         name = findViewById(R.id.et_name_register);
         surname = findViewById(R.id.et_surname_register);
@@ -56,7 +58,9 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.et_password_register);
         password2 = findViewById(R.id.et_repeat_password);
         mProgressView = findViewById(R.id.login_progress_reg);
-        prefRegister = getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY, Context.MODE_PRIVATE);
+        prefRegister = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY, Context.MODE_PRIVATE);
+        deviceId = prefRegister.getInt(ConstantsHolder.DEVICE_ID, 0);
+
 
         //wyswietlenie tylko raz mozliwosci logiwania
         if (prefRegister.getBoolean(getString(R.string.is_after_register), false)) {
@@ -149,6 +153,7 @@ public class RegisterActivity extends AppCompatActivity {
             userJson.setName(mName);
             userJson.setSurname(mSurname);
             userJson.setEmail(mEmail);
+            userJson.setDeviceId(deviceId);
 
             mAuthTask = new UserRegisterTask(userJson);
             mAuthTask.execute();
@@ -197,8 +202,6 @@ public class RegisterActivity extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
 
-            logger.info(result.getStatusCode() + " " + result.getStatusCode().getReasonPhrase());
-
             if (result.getStatusCode().equals(HttpStatus.OK)) {
 
                 //zapisanie obiektu uzytkownika w SharedPreferences
@@ -211,7 +214,7 @@ public class RegisterActivity extends AppCompatActivity {
                 editor.putInt(ConstantsHolder.USER_ID, result.getBody().getId());
                 editor.apply();
 
-                SharedPreferences.Editor edRegister = prefRegister.edit();
+                SharedPreferences.Editor edRegister = preferences.edit();
                 edRegister.putBoolean(getString(R.string.is_after_register), true);
                 edRegister.putBoolean(getString(R.string.is_after_login), true);
                 edRegister.apply();

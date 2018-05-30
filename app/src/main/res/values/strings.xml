@@ -80,6 +80,7 @@
 
     <string name="error_event_not_found">Event not found</string>
     <string name="error_event_used">This event is used</string>
+    <string name="error_event_wrong_code">Wrong code for this event </string>
     <string name="error_event_code_range">Code must had 6 digits</string>
     <string name="error_event_name_range">Name max lenght is 20 chars</string>
 

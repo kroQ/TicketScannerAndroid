@@ -1,15 +1,20 @@
 package com.krok.ticketscanner;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +22,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.krok.json.DeviceJson;
 import com.krok.json.UserJson;
 
 import org.springframework.http.HttpEntity;
@@ -29,6 +36,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import static android.text.TextUtils.isEmpty;
@@ -39,7 +47,10 @@ public class LoginActivity extends AppCompatActivity {
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    private DeviceSaveTask mDeviceTask = null;
     private Context context = this;
+    private Long androidId;
+    private int deviceId;
     SharedPreferences pref;
 
     private static Logger logger = Logger.getLogger(
@@ -96,6 +107,33 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_PHONE_STATE)) {
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+            }
+        }
+
+        androidId = Long.valueOf(tm.getDeviceId());
+
+        DeviceJson deviceJson = new DeviceJson();
+        deviceJson.setAndroidId(androidId);
+        deviceJson.setName(android.os.Build.MODEL);
+        deviceJson.setDeviceType(Build.MANUFACTURER);
+
+        mDeviceTask = new DeviceSaveTask(deviceJson);
+        mDeviceTask.execute();
+
     }
 
     private void tryToLogin() {
@@ -128,6 +166,7 @@ public class LoginActivity extends AppCompatActivity {
 
             UserJson userJson = new UserJson();
             userJson.setLogin(login);
+            userJson.setDeviceId(deviceId);
             userJson.setPassword(BCrypt.hashpw(password, ConstantsHolder.PASWD_SALT));
 
             mAuthTask = new UserLoginTask(userJson);
@@ -159,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<String, String, ResponseEntity<UserJson>> {
+    private class UserLoginTask extends AsyncTask<String, String, ResponseEntity<UserJson>> {
 
         private final UserJson mUserJson;
 
@@ -185,7 +224,6 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(final ResponseEntity<UserJson> result) {
             mAuthTask = null;
             showProgress(false);
-            logger.info(result.getStatusCode().toString());
 
             if (result.getStatusCode().equals(HttpStatus.OK)) {
 
@@ -211,8 +249,11 @@ public class LoginActivity extends AppCompatActivity {
             } else if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
                 mLoginFormView.setError(getString(R.string.error_login_not_found));
                 mLoginFormView.requestFocus();
+            } else if (result.getStatusCode().equals(HttpStatus.IM_USED)) {
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
             } else {
-                //TODO check password
+                logger.info("SOME_ERROR " + result.getStatusCode());
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
@@ -221,6 +262,58 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             mAuthTask = null;
+            showProgress(false);
+        }
+    }
+
+    private class DeviceSaveTask extends AsyncTask<String, String, ResponseEntity<DeviceJson>> {
+
+        private final DeviceJson mDeviceJson;
+
+        DeviceSaveTask(DeviceJson deviceJson) {
+            mDeviceJson = deviceJson;
+        }
+
+        @Override
+        protected ResponseEntity<DeviceJson> doInBackground(String... strings) {
+            String url = ConstantsHolder.IP_ADDRESS + ConstantsHolder.URL_DEVICE;
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+            HttpEntity<DeviceJson> entity = new HttpEntity<>(mDeviceJson, headers);
+
+            ResponseEntity<DeviceJson> result = restTemplate.exchange(url, HttpMethod.POST, entity, DeviceJson.class);
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(final ResponseEntity<DeviceJson> result) {
+
+            deviceId = result.getBody().getId();
+            mDeviceTask = null;
+            showProgress(false);
+
+            SharedPreferences preferences;
+            SharedPreferences.Editor editor;
+            preferences = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY,
+                    Context.MODE_PRIVATE);
+            editor = preferences.edit();
+            editor.putInt(ConstantsHolder.DEVICE_ID, result.getBody().getId());
+            editor.apply();
+
+            if (result.getStatusCode().equals(HttpStatus.OK)) {
+                Toast.makeText(context, ConstantsHolder.NEW_DEVICE, Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(context, ConstantsHolder.OLD_DEVICE, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mDeviceTask = null;
             showProgress(false);
         }
     }
