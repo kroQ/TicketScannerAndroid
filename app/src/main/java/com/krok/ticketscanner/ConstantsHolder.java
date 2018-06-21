@@ -21,9 +21,10 @@ class ConstantsHolder {
 
     //urls
     final static String URL_LOGIN = "/user/login";
-    final static String URL_REGISTER = "/user/register";
-    final static String URL_EVENT = "/event/";
-    final static String URL_EVENT_ALL = "/event/all/";
+    final static String URL_REGISTER = "/register/";
+    final static String URL_SECURITY_LOGIN = "/login";
+    final static String URL_EVENT = "/user/event/";
+    final static String URL_EVENT_ALL = "/user/event/all/";
     final static String URL_TICKET = "/ticket/";
     final static String URL_DEVICE = "/device/";
     final static String URL_TICKET_ALL = "/ticket/all/";

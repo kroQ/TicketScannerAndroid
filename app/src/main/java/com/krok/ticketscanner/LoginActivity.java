@@ -33,9 +33,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -46,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    private SecurityLogin mAuthTask = null;
     private DeviceSaveTask mDeviceTask = null;
     private Context context = this;
     private Long androidId;
@@ -131,9 +134,11 @@ public class LoginActivity extends AppCompatActivity {
         deviceJson.setName(android.os.Build.MODEL);
         deviceJson.setDeviceType(Build.MANUFACTURER);
 
-        mDeviceTask = new DeviceSaveTask(deviceJson);
-        mDeviceTask.execute();
-
+        //TODO To jakos zamienic
+        if(!pref.getBoolean(getString(R.string.is_after_login), false)){
+            mDeviceTask = new DeviceSaveTask(deviceJson);
+            mDeviceTask.execute();
+        }
     }
 
     private void tryToLogin() {
@@ -167,10 +172,15 @@ public class LoginActivity extends AppCompatActivity {
             UserJson userJson = new UserJson();
             userJson.setLogin(login);
             userJson.setDeviceId(deviceId);
-            userJson.setPassword(BCrypt.hashpw(password, ConstantsHolder.PASWD_SALT));
+//            userJson.setPassword(BCrypt.hashpw(password, ConstantsHolder.PASWD_SALT));
+            userJson.setPassword(password);
 
-            mAuthTask = new UserLoginTask(userJson);
+            mAuthTask = new SecurityLogin(userJson.getLogin(), userJson.getPassword());
             mAuthTask.execute();
+//
+
+//            mAuthTask = new UserLoginTask(userJson);
+//            mAuthTask.execute();
 
         } else {
             focusView.requestFocus();
@@ -323,5 +333,76 @@ public class LoginActivity extends AppCompatActivity {
         super.finish();
         instance = null;
     }
+
+    public class SecurityLogin extends AsyncTask<String, String, ResponseEntity<UserJson>> {
+
+        private String mLogin, mPassword;
+
+        SecurityLogin(String login, String password) {
+            mLogin = login;
+            mPassword = password;
+        }
+
+        @Override
+        protected ResponseEntity<UserJson> doInBackground(String... strings) {
+            logger.info("Rozpoczynam wysylanie secure loginu: L " + mLogin + " P: " + mPassword);
+            String url = ConstantsHolder.IP_ADDRESS + "/login";
+
+            MultiValueMap<String, String> loginAndPassword = new LinkedMultiValueMap<>();
+            loginAndPassword.add("username", mLogin);
+            loginAndPassword.add("password", mPassword);
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
+            requestHeaders.add("Content-Type", "application/x-www-form-urlencoded");
+            requestHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+            HttpEntity entity = new HttpEntity<>(loginAndPassword, requestHeaders);
+
+            return restTemplate.exchange(url, HttpMethod.POST, entity, UserJson.class);
+        }
+
+        @Override
+        protected void onPostExecute(final ResponseEntity<UserJson> result) {
+            mAuthTask = null;
+            showProgress(false);
+
+            if (result.getStatusCode().equals(HttpStatus.OK)) {
+
+                //zapisanie obiektu uzytkownika w SharedPreferences
+                SharedPreferences preferences;
+                SharedPreferences.Editor editor;
+                preferences = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY,
+                        Context.MODE_PRIVATE);
+                editor = preferences.edit();
+                editor.putString(ConstantsHolder.USER_LOGIN, result.getBody().getLogin());
+                editor.putInt(ConstantsHolder.USER_ID, result.getBody().getId());
+                editor.apply();
+
+                SharedPreferences.Editor edRegister = pref.edit();
+                edRegister.putBoolean(getString(R.string.is_after_register), true);
+                edRegister.putBoolean(getString(R.string.is_after_login), true);
+                edRegister.apply();
+
+                context = getApplicationContext();
+                Intent intent = new Intent(context, HeadquartersActivity.class);
+                startActivity(intent);
+
+            } else if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
+                mLoginFormView.setError(getString(R.string.error_login_not_found));
+                mLoginFormView.requestFocus();
+            } else if (result.getStatusCode().equals(HttpStatus.IM_USED)) {
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
+            } else {
+                logger.info("SOME_ERROR " + result.getStatusCode());
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
+            }
+        }
+
+    }
+
+
 }
 

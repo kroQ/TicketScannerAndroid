@@ -17,16 +17,27 @@ import android.widget.Toast;
 
 import com.krok.json.UserJson;
 
+import org.springframework.http.HttpAuthentication;
+import org.springframework.http.HttpBasicAuthentication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
+
+import org.apache.commons.codec.binary.Base64;
+
 
 import static android.text.TextUtils.isEmpty;
 
@@ -204,6 +215,10 @@ public class RegisterActivity extends AppCompatActivity {
 
             if (result.getStatusCode().equals(HttpStatus.OK)) {
 
+
+                SecurityLogin securityLogin = new SecurityLogin(mUserJson.getLogin());
+                securityLogin.execute();
+
                 //zapisanie obiektu uzytkownika w SharedPreferences
                 SharedPreferences preferences;
                 SharedPreferences.Editor editor;
@@ -238,4 +253,59 @@ public class RegisterActivity extends AppCompatActivity {
             showProgress(false);
         }
     }
+
+
+    public class SecurityLogin extends AsyncTask<String, String, ResponseEntity> {
+
+        private String mLogin, mPassword;
+
+        SecurityLogin(String login) {
+            mLogin = login;
+            mPassword = password.getText().toString();
+        }
+
+        @Override
+        protected ResponseEntity doInBackground(String... strings) {
+            logger.info("Rozpoczynam wysylanie secure loginu: L " + mLogin + " P: " + mPassword);
+            String url = ConstantsHolder.IP_ADDRESS + ConstantsHolder.URL_SECURITY_LOGIN;
+
+
+            MultiValueMap<String, String> loginAndPassword = new LinkedMultiValueMap<>();
+            loginAndPassword.add("username", mLogin);
+            loginAndPassword.add("password", password.getText().toString());
+
+
+//            HttpAuthentication authHeader = new HttpBasicAuthentication(mLogin, mPassword);
+//            HttpHeaders requestHeaders = new HttpHeaders();
+//            requestHeaders.setAuthorization(authHeader);
+//            HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+//
+//            RestTemplate restTemplate = new RestTemplate();
+//
+//            restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+
+//            HttpAuthentication authHeader = new HttpBasicAuthentication(mLogin, mPassword);
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
+            requestHeaders.add("Content-Type", "application/x-www-form-urlencoded");
+//            requestHeaders.setAuthorization(authHeader);
+            requestHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+            HttpEntity entity = new HttpEntity(loginAndPassword, requestHeaders);
+
+            return restTemplate.exchange(url, HttpMethod.POST, entity, UserJson.class);
+        }
+
+//
+//        @Override
+//        protected void onPostExecute(final ResponseEntity result) {
+//            if (result.getStatusCode().equals(HttpStatus.OK)) {
+//                Toast.makeText(context, "No to mozna strzelac", Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(context, "DUPSKO do 2", Toast.LENGTH_LONG).show();
+//            }
+//        }
+
+    }
+
 }

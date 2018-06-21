@@ -238,6 +238,7 @@ public class NewEventActivity extends AppCompatActivity {
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders headers = new HttpHeaders();
+//            headers.add("Authorization")
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             HttpEntity<EventJson> entity = new HttpEntity<>(mEventJson, headers);
 

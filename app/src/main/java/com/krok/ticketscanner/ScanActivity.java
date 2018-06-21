@@ -146,7 +146,7 @@ public class ScanActivity extends AppCompatActivity {
         json.setEmail(ticketData.getString("email"));
 //        json.setBirthDate(calendar.getTime());
 
-        DateFormat format = new SimpleDateFormat("dd-MM-YYYY", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
         Date date = null;
         try {
             date = format.parse(ticketData.getString("birth_date"));

@@ -34,6 +34,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.4'
 
     android {
         buildToolsVersion '27.0.3' // Older versions may give compile errors
