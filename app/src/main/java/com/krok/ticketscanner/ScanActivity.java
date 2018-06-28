@@ -33,7 +33,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -193,12 +192,19 @@ public class ScanActivity extends AppCompatActivity {
         protected void onPostExecute(ResponseEntity<TicketJson> result) {
             mAuthTask = null;
             if (result.getStatusCode().equals(HttpStatus.OK)) {
-                Toast.makeText(context, "Pierwszy raz", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show();
 
             } else if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
                 //No W takim wypadku wychodzi, wiec trzeba piknac ze 3 razy
+                Toast toast = Toast.makeText(context, "Someone left?", Toast.LENGTH_SHORT);
+                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                v.setDrawingCacheBackgroundColor(Color.RED);
+                v.setHintTextColor(Color.RED);
+                v.setBackgroundColor(Color.RED);
+                v.setHighlightColor(Color.RED);
+                toast.show();
 
-                Toast.makeText(context, "Someone left?", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Someone left?", Toast.LENGTH_SHORT).show();
                 scanNext.setTextColor(Color.RED);
                 ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 750);

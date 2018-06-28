@@ -12,8 +12,8 @@
 
     <!--Activity Register-->
     <string name="name">Name…</string>
-    <string name="nameS">Name</string>
     <string name="surname">Surname…</string>
+    <string name="nameS">Name</string>
     <string name="surnameS">Surname</string>
     <string name="or">Or…</string>
     <string name="register">Register</string>

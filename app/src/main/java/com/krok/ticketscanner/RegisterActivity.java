@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,27 +18,19 @@ import android.widget.Toast;
 
 import com.krok.json.UserJson;
 
-import org.springframework.http.HttpAuthentication;
-import org.springframework.http.HttpBasicAuthentication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
-
-import org.apache.commons.codec.binary.Base64;
-
 
 import static android.text.TextUtils.isEmpty;
 
@@ -136,10 +129,10 @@ public class RegisterActivity extends AppCompatActivity {
             is_valid = false;
             focusView = email;
             //TODO unncoment it
-//        } else if (!Patterns.EMAIL_ADDRESS.matcher(mEmail).matches()) {
-//            email.setError(getString(R.string.error_invalid_email));
-//            focusView = email;
-//            is_valid = false;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(mEmail).matches()) {
+            email.setError(getString(R.string.error_invalid_email));
+            focusView = email;
+            is_valid = false;
         }
         if (isEmpty(mPassword)) {
             password.setError(getString(R.string.error_field_required));

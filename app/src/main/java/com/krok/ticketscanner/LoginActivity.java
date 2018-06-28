@@ -39,7 +39,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import static android.text.TextUtils.isEmpty;
@@ -290,12 +289,10 @@ public class LoginActivity extends AppCompatActivity {
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             HttpEntity<DeviceJson> entity = new HttpEntity<>(mDeviceJson, headers);
 
-            ResponseEntity<DeviceJson> result = restTemplate.exchange(url, HttpMethod.POST, entity, DeviceJson.class);
-
-            return result;
+            return restTemplate.exchange(url, HttpMethod.POST, entity, DeviceJson.class);
         }
 
         @Override
@@ -310,7 +307,7 @@ public class LoginActivity extends AppCompatActivity {
             preferences = context.getSharedPreferences(ConstantsHolder.SHARED_PREF_KEY,
                     Context.MODE_PRIVATE);
             editor = preferences.edit();
-            editor.putInt(ConstantsHolder.DEVICE_ID, result.getBody().getId());
+            editor.putInt(ConstantsHolder.DEVICE_ID, deviceId);
             editor.apply();
 
             if (result.getStatusCode().equals(HttpStatus.OK)) {

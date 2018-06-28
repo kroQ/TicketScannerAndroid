@@ -197,6 +197,10 @@ public class NewEventActivity extends AppCompatActivity {
         });
     }
 
+    protected boolean isDateCorrect(Calendar before, Calendar after) {
+        return before != null && after != null && (before.equals(after) || before.before(after));
+    }
+
     private void updateLabelStart() {
         String myFormat = "dd-MM-yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
