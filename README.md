@@ -1,3 +1,8 @@
-# TicketScannerAndroid
+# TicketScannerAndroid - Android app
 
-just add JsonBridge.jar build from TicketScanner project
+By uruchomić aplikację, wystarczy podpiąć zbudowany plik JsobBridge.jar z projektu TicketScanner do folderu libs oraz podmienić adres IP, pod którym znajduje się strona serwerowa (plik ConstantsHolder.java).
+
+Po instalacji na telefonie, należy zezwolić aplikacji na trzy rzeczy:   
+przechwytywanie kamery,   
+dostęp do internetu,  
+odczyt stanu telefonu
